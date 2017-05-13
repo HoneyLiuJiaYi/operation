@@ -271,6 +271,7 @@
                 }else{
                     $('<td><button class="btn btn-danger btn-xs active">恢复</button></td>').appendTo(tr);
                 }
+                $('<td><button class="btn  btn-xs success" onclick="chong(' + user_list[i].id + ')">充钱</button></td>').appendTo(tr);
                 //
                 //$('<td><a class="btn btn-primary btn-xs" href="./admin_edit.html?this_admin_id=' + user_list[i].id + '">编辑</a><a class="btn btn-danger btn-xs" data="1" action="delete">删除</a></td>').appendTo(tr);
             }
@@ -333,6 +334,13 @@
     setTimeout(function () {
         $("#info").slideUp(500);
     }, 3000);
+</script>
+<script>
+    function chong(id){
+        localStorage.userId = id;
+        window.location.href="./user_card.html"
+    }
+
 </script>
 <link rel="stylesheet" type="text/css" href="public/stylesheets">
 <script type="text/javascript" src="public/javascript"></script>
