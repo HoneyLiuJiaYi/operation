@@ -4,7 +4,7 @@
     
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="znTlEIsix2DS0LyjKoCjMLEpZOrgDN2gNVaogKUW">
-    <title>享洗小组-骑士禁用</title>
+    <title id="title">享洗小组-骑士列表页</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -385,119 +385,8 @@
 <!-- AdminLTE for demo purposes -->
 <script src="./public/demo.js"></script>
 <script src="./public/auth_admin.js"></script>
-<script>
-	$.ajax({
-		url:'http://180.76.141.171:81/manage/rider',
-		type:'get',
-		dataType: 'json',
-		success:function(data){
-			var table=$("#example1 tbody")[0]
-
-			var rider_list=data.riders;//admins
-			
-			var tr=$("<tr></tr>");
-			tr.appendTo(table);
-			for(var i=0;i<rider_list.length;i++)
-			{
-				var tr=$("<tr></tr>");
-				tr.appendTo(table);
-				
-				//添加id
-				var td_rider_id=$("<td align='center'>"+rider_list[i].id+"</td>");
-				td_rider_id.appendTo(tr);
-				//name
-				$("<td align='center'>"+rider_list[i].name+"</td>").appendTo(tr);
-				//mobile
-				$("<td align='center'>"+rider_list[i].mobile+"</td>").appendTo(tr);
-				//sex
-				$("<td align='center'>"+rider_list[i].sex+"</td>").appendTo(tr);
-				//license_num
-				$("<td align='center'>"+rider_list[i].license_num+"</td>").appendTo(tr);
-				
-				//card
-				$('<td><img src="'+rider_list[i].id_front+'" width="30" height="30"></td>').appendTo(tr);
-				//card
-				$('<td><img src="'+rider_list[i].id_back+'" width="30" height="30"></td>').appendTo(tr);
-				
-				//操作
-				if(rider_list[i].is_del==0){
-					$('<td><button class="btn btn-danger btn-xs stop">禁用</button>|<button class="btn btn-danger btn-xs  station">站点</button></td>').appendTo(tr);
-				}else{
-					$('<td><button class="btn btn-danger btn-xs active">恢复</button>|<button class="btn btn-danger btn-xs  station">站点</button></td>').appendTo(tr);
-				}
-			}
-			
-			$(".stop").each(function(event){
-				$(this).click(function(event){
-					
-					var rider_id = $(this).parent().siblings(":first").text();
-					
-					$.ajax({
-						url:'http://180.76.141.171:81/stop/rider',
-						type:'post',
-						dataType: 'json',
-						data: {"rider_id": rider_id},
-						success:function(data){
-							if(data.status==0){
-								alert("禁用成功");
-                                window.location.href = "./rider_list.html";
-								
-							}
-						},
-						error:function(){
-							alert("error");
-						}
-					});
-				});
-			});
-            $(".station").each(function(event){
-                $(this).click(function(event){
-
-                    var rider_id = $(this).parent().siblings(":first").text();
-                    localStorage.update_rider_id = rider_id;
-                    window.location.href = "./rider_stations_list.html";
-
-                });
-            });
-			$(".active").each(function(event){
-				$(this).click(function(event){
-					
-					var rider_id = $(this).parent().siblings(":first").text();
-					
-					$.ajax({
-						url:'http://180.76.141.171:81/active/rider',
-						type:'post',
-						dataType: 'json',
-						data: {"rider_id": rider_id},
-						success:function(data){
-							if(data.status==0){
-								alert("恢复成功");
-                                window.location.href = "./rider_list.html";
-								
-							}
-						},
-						error:function(){
-							alert("error");
-						}
-					});
-				});
-			});
-		},
-		error:function(){
-		}
-	});
-	 $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-	var myAlert = $('#alert');
-    setTimeout(function(){
-        $("#info").slideUp(500);
-    }, 3000);
-</script>
 <link rel="stylesheet" type="text/css" href="./public/stylesheets"><script type="text/javascript" src="./public/javascript"></script>
-<!--<script type="text/javascript">jQuery.noConflict(true);</script>-->
+<script type="text/javascript">jQuery.noConflict(true);</script>
 
 
 <div class="jvectormap-label"></div></body></html>

@@ -7,10 +7,10 @@ $(function () {
         $('#role_auth').hide();
     }
     var title = $("#title").text();
-    if (title == "首页-享洗小组") {
+    if (title == "享洗小组-性别统计") {
         sexStatic();
     }
-    if (title == "享洗小组-管理员管理页") {
+    if (title == "享洗小组-商品列表页") {
         productList();
     }
     if (title == "享洗小组-骑手站点管理页") {
@@ -29,11 +29,54 @@ $(function () {
          areaStatic();
     }if (title == "首页-区域统计") {
         areaStatic();
-    }if (title == "享洗小组-管理员编辑") {
+    }if (title == "享洗小组-管理员添加") {
         adminAdd();
+    }if (title == "享洗小组-管理员列表管理页") {
+        adminList();
+    }if (title == "管理员登录-享洗小组") {
+        adminLogin();
+    }if (title == "享洗小组-品类添加") {
+        categoryAdd();
+    }if (title == "享洗小组-品类编辑") {
+        categoryEdit();
+    }if (title == "享洗小组-品类列表页") {
+        categoryList();
+    }if (title == "享洗小组-优惠券建立") {
+        couponCreate();
+    }if (title == "享洗小组-优惠券展示页") {
+        couponList();
+    }if (title == "享洗小组-流水管理页") {
+        logList();
+    }if (title == "享洗小组-工厂审核") {
+        merchantExamine();
+    }if (title == "享洗小组-工厂列表") {
+        merchantList();
+    }if (title == "享洗小组-价格编辑") {
+        priceEdit();
+    }if (title == "享洗小组-产品添加") {
+        productAdd();
+    }if (title == "享洗小组-商品列表页") {
+        productList();
+    }if (title == "享洗小组-骑手审核") {
+        riderExamine();
+    }if (title == "享洗小组-骑士列表页") {
+        riderList();
+    }if (title == "享洗小组-站点建立") {
+        stationAdd();
+    }if (title == "享洗小组-站点列表页") {
+        stationList();
+    }if (title == "享洗小组-用户充钱") {
+        userCard();
+    }if (title == "享洗小组-首页") {
+        welcome();
+    }if (title == "享洗小组-用户列表页") {
+        userList();
+    }if (title == "享洗小组-用户优惠券") {
+        userCoupon();
+    }if (title == "享洗小组-优惠券排除页") {
+        userNotCoupon();
     }
     sidebar();
-
     var a_id = localStorage.a_id;
     var a_nick = localStorage.a_nick;
     var is_del = localStorage.is_del;
@@ -86,10 +129,6 @@ function sexStatic() {
         }
     });
 
-    //-------------
-    //- PIE CHART -
-    //-------------
-    // Get context with jQuery - using jQuery's .get() method.
     var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
     var pieChart = new Chart(pieChartCanvas);
     var PieData = [
@@ -131,11 +170,1237 @@ function sexStatic() {
         //String - A legend template
         legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
     };
-    //Create pie or douhnut chart
-    // You can switch between pie and douhnut using the method below.
     pieChart.Doughnut(PieData, pieOptions);
-    // barChartOptions.datasetFill = false;
-    // barChart.Bar(barChartData, barChartOptions);
+}
+
+function userNotCoupon(){
+    var dataJson = {};
+    dataJson.user_id = localStorage.userId;
+    $.ajax({
+        url: 'http://180.76.141.171:81/coupon/not',
+        type: 'post',
+        data: dataJson,
+        dataType: 'json',
+        success: function (data) {
+            var table = $("tbody")[0];
+            var coupons = data.data.coupons;//admins
+            for (var i = 0; i < coupons.length; i++) {
+                var tr = $("<tr></tr>");
+                tr.appendTo(table);
+                $("<td>" + coupons[i].id + "</td>").appendTo(tr);
+                $("<td>" + coupons[i].name + "</td>").appendTo(tr);
+                $("<td>" + coupons[i].from + "</td>").appendTo(tr);
+                $("<td>" + coupons[i].to + "</td>").appendTo(tr);
+                $("<td>" + coupons[i].price + "</td>").appendTo(tr);
+                $("<td>" + coupons[i].discount + "</td>").appendTo(tr);
+                $('<td><button class="btn  btn-xs success couponAdd" >添加</button></td>').appendTo(tr);
+            }
+            $(".stop").each(function(event){
+                $(this).click(function(event){
+                    var dataJson = {};
+                    dataJson.coupon_id = $(this).parent().siblings(":first").text();
+                    dataJson.user_id = localStorage.userId;
+                    $.ajax({
+                        url: 'http://180.76.141.171:81/coupon/catch',
+                        type: 'post',
+                        data: dataJson,
+                        dataType: 'json',
+                        success: function (data) {
+                            if(data.status==0){
+                                alert("添加成功");
+                                window.location.href = "./user_coupon.html";
+                            } else {
+                                alert("添加失败");
+                            }
+                        },
+                        error: function () {
+                            alert("error");
+                        }
+                    });
+                });
+            });
+        },
+        error: function () {
+            alert("error");
+        }
+    });
+}
+
+function userCoupon(){
+    var dataJson = {};
+    dataJson.user_id = localStorage.userId;
+    $.ajax({
+        url: 'http://180.76.141.171:81/coupon/user',
+        type: 'post',
+        data: dataJson,
+        dataType: 'json',
+        success: function (data) {
+            var table = $("tbody")[0];
+            var coupons = data.data.coupons;//admins
+            for (var i = 0; i < coupons.length; i++) {
+                var tr = $("<tr></tr>");
+                tr.appendTo(table);
+                $("<td>" + coupons[i].id + "</td>").appendTo(tr);
+                $("<td>" + coupons[i].name + "</td>").appendTo(tr);
+                $("<td>" + coupons[i].from + "</td>").appendTo(tr);
+                $("<td>" + coupons[i].to + "</td>").appendTo(tr);
+                $("<td>" + coupons[i].price + "</td>").appendTo(tr);
+                $("<td>" + coupons[i].discount + "</td>").appendTo(tr);
+                $('<td><button class="btn  btn-xs success deleteCoupon" >删除</button></td>').appendTo(tr);
+            }
+            $('.deleteCoupon').click(function(){
+                var id = $(this).parent().siblings(":first").text();
+                var dataJson = {};
+                dataJson.coupon_id = id;
+                dataJson.user_id = localStorage.userId;
+                $.ajax({
+                    url: 'http://180.76.141.171:81/coupon/user/delete',
+                    type: 'post',
+                    data: dataJson,
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data.status==0){
+                            alert("删除成功");
+                            window.location.href = "./user_coupon.html";
+                        } else {
+                            alert("删除失败");
+                        }
+                    },
+                    error: function () {
+                        alert("error");
+                    }
+                });
+            })
+        },
+        error: function () {
+            alert("error");
+        }
+    });
+}
+
+function userList(){
+    $.ajax({
+        url: 'http://180.76.141.171:81/user/list',
+        type: 'get',
+        dataType: 'json',
+        success: function (data) {
+            var table = $("#example1 tbody")[0]
+            var user_list = data.data.users;//admins
+            for (var i = 0; i < user_list.length; i++) {
+                var tr = $("<tr></tr>");
+                tr.appendTo(table);
+                //添加id
+                var td_merchant_id = $("<td>" + user_list[i].id + "</td>");
+                td_merchant_id.appendTo(tr);
+                //nick
+                $("<td>" + user_list[i].name + "</td>").appendTo(tr);
+                $("<td>" + user_list[i].sex + "</td>").appendTo(tr);
+
+                $("<td>" + user_list[i].mobile + "</td>").appendTo(tr);
+                if(user_list[i].is_del==0){
+                    $("<td>正常</td>").appendTo(tr);
+                }else{
+                    $("<td>异常</td>").appendTo(tr);
+                }
+                if(user_list[i].is_del==0){
+                    $('<td><button class="btn btn-danger btn-xs stop">禁用</button>' + '<button class="btn  btn-xs success chong" style="margin-left:10px;" >充钱</button></td>').appendTo(tr);
+                }else{
+                    $('<td><button class="btn btn-danger btn-xs active">恢复</button>' + '<button class="btn  btn-xs success chong" style="margin-left:10px;" >充钱</button></td>').appendTo(tr);
+                }
+                $('<td><button class="btn  btn-xs success coupon" >查券</button></td>').appendTo(tr);
+            }
+            $(".stop").each(function(event){
+                $(this).click(function(event){
+                    var user_id = $(this).parent().siblings(":first").text();
+
+                    $.ajax({
+                        url:'http://180.76.141.171:81/user/stop',
+                        type:'post',
+                        dataType: 'json',
+                        data: {"user_id": user_id},
+                        success:function(data){
+                            if(data.status==0){
+                                alert("禁用成功");
+                                window.location.href = "./user_list0.html";
+
+                            }
+                        },
+                        error:function(){
+                            alert("error");
+                        }
+                    });
+                });
+            });
+            $(".chong").each(function(event){
+                $(this).click(function(event){
+                    localStorage.userId = $(this).parent().siblings(":first").text();
+                    window.location.href="./user_card.html"
+                });
+            });
+            $(".coupon").each(function(event){
+                $(this).click(function(event){
+                    localStorage.userId = $(this).parent().siblings(":first").text();
+                    window.location.href = "./user_coupon.html";
+                });
+            });
+            $(".active").each(function(event){
+                $(this).click(function(event){
+
+                    var user_id = $(this).parent().siblings(":first").text();
+
+                    $.ajax({
+                        url:'http://180.76.141.171:81/user/active',
+                        type:'post',
+                        dataType: 'json',
+                        data: {"user_id": user_id},
+                        success:function(data){
+                            if(data.status==0){
+                                alert("恢复成功");
+                                window.location.href = "./user_list0.html";
+                            }
+                        },
+                        error:function(){
+                            alert("error");
+                        }
+                    });
+                });
+            });
+        },
+        error: function () {
+            alert("error");
+        }
+    });
+
+    var myAlert = $('#alert');
+    setTimeout(function () {
+        $("#info").slideUp(500);
+    }, 3000);
+}
+
+function welcome(){
+    var myAlert = $('#alert');
+    setTimeout(function(){
+        $("#info").slideUp(500);
+    }, 3000);
+
+    $('a[action="delete"]').on('click',function(){
+        var id = $(this).attr('data');
+        var me = $(this).parent().parent();
+        $.ajax({
+            url:''+id,
+            type:'delete',
+            dataType: 'json',
+            success:function(data){
+                console.log(typeof(data.code));
+                switch(data.code){
+                    case 0:
+                        me.remove();
+                        myAlert.removeClass('callout-danger');
+                        myAlert.addClass('callout-success');
+                        myAlert.find('p[name="content"]').html('删除成功');
+                        break;
+                    case 1:
+                        myAlert.removeClass('callout-success');
+                        myAlert.addClass('callout-danger');
+                        myAlert.find('p[name="content"]').html('删除失败');
+                        break;
+                }
+                myAlert.removeClass('hide');
+                myAlert.stop(true,true).slideDown();
+                setTimeout(function(){
+                    myAlert.stop(true,true).slideUp(500);
+                },1000);
+            },
+            error:function(){
+                alert("error");
+            }
+        });
+    });
+}
+
+function userCard(){
+    var dataJson = {};
+    dataJson.user_id = localStorage.userId;
+    $.ajax({
+        cache: false,
+        type: "POST",
+        url:"http://180.76.141.171:81/user/card",
+        data: dataJson,
+        async: true,
+        error: function(request) {
+            alert("Connection error");
+        },
+        success: function(data) {
+            if (data.status=='0') {
+                user_card = data.data.user_card;
+                $('#id').val(user_card.id);
+                $('#real_money').val(user_card.real_money);
+                $('#fake_money').val(user_card.fake_money);
+                $('#create').val(user_card.created_at);
+                $('#update').val(user_card.updated_at);
+            }else{
+                alert('获取信息失败！');
+            }
+        }
+    });
+    $('#putMoney').click(function(){
+        var dataJson = {};
+        dataJson.user_id = localStorage.userId;
+        dataJson.money = $('#money').val();
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url:"http://180.76.141.171:81/user/input/money",
+            data: dataJson,
+            async: true,
+            error: function(request) {
+                alert("Connection error");
+            },
+            success: function(data) {
+                if (data.status=='0') {
+                    alert("充值成功");
+                    window.location.reload();
+                }else{
+                    alert('获取信息失败！');
+                }
+            }
+        })
+    })
+}
+
+function stationList(){
+    $.ajax({
+        url: 'http://180.76.141.171:81/station/all',
+        type: 'get',
+        dataType: 'json',
+        success: function (data) {
+            var table = $("tbody")[0];
+
+            var station_list = data.data.stations;//admins
+            var adress_list = data.data.addresses;//admins
+            for (var i = 0; i < station_list.length; i++) {
+                var tr = $("<tr></tr>");
+                tr.appendTo(table);
+                //添加id
+                var td_admin_id = $("<td>" + station_list[i].id + "</td>");
+                td_admin_id.appendTo(tr);
+                //nick
+                $("<td>" + station_list[i].name + "</td>").appendTo(tr);
+                //状态
+                //创建时间
+                $("<td>" + adress_list[i].lat + "</td>").appendTo(tr);
+                $("<td>" + adress_list[i].lng + "</td>").appendTo(tr);
+                $("<td>" + adress_list[i].comment + "</td>").appendTo(tr);
+                $("<td>" + station_list[i].created_at + "</td>").appendTo(tr);
+                //更新时间
+                $("<td>" + station_list[i].updated_at + "</td>").appendTo(tr);
+                 $('<td><a class="btn btn-danger btn-xs delete">删除</a>').appendTo(tr);
+
+            }
+
+            $(".delete").each(function(event){
+                $(this).click(function(event){
+
+                    var admin_id = $(this).parent().siblings(":first").text();
+                    $.ajax({
+                        url:'http://180.76.141.171:81/station/destroy',
+                        type:'post',
+                        dataType: 'json',
+                        data: {"station_id": admin_id},
+                        success:function(data){
+                            if(data.status==0){
+                                window.location.href = "./station_list.html";
+                                alert("删除成功");
+                            }
+                        },
+                        error:function(){
+                            alert("删除失败");
+                        }
+                    });
+                });
+            });
+        },
+        error: function () {
+            alert("error");
+        }
+    });
+}
+
+function stationAdd(){
+    var city = [];
+    $(document).ready(function(){
+        $('#fr').attr("src", "./baidu_map.html");
+    })
+    function changeCity(){
+        $.ajax({
+            url: 'http://api.map.baidu.com/place/v2/suggestion',
+            type: "get",
+            data: "query=" + $('#tags').val() + "&region=" + $('#region').val() + "&city_limit=true&output=json&ak=MVX9n2erFcFAZIDp8yw3ICCpozbvmtwP",
+            dataType: "jsonp",
+            async: 'false',
+            success: function(data){
+                for (var i = 0 ; i < data.result.length ; i++){
+                    city[i] = data.result[i].name;
+                    console.log(city[i]);
+                }
+                $('#tags').autocomplete({
+                    source: city,
+                    select: function(event, data){
+                        $.ajax({
+                            url: 'http://api.map.baidu.com/place/v2/suggestion',
+                            type: "get",
+                            data: "query=" + data.item.value + "&region=" + $('#region').val() + "&city_limit=true&output=json&ak=MVX9n2erFcFAZIDp8yw3ICCpozbvmtwP",
+                            dataType: "jsonp",
+                            async: 'false',
+                            success: function(data){
+                                $('#lat').val(data.result[0].location.lat);
+                                $('#lng').val(data.result[0].location.lng);
+                            }
+                        })
+                    }
+                });
+            }
+        });
+    }
+    $('#tags').blur(function(){
+        var region = $('#region').val();
+        var address = $('#tags').val();
+        if (region == "" || region == undefined || region == null){
+            alert("区域不能为空");
+            return;
+        } else if(address == "" || address == undefined || address == null){
+            alert("具体地址不能为空");
+        }
+        $.ajax({
+            url: "https://api.map.baidu.com/place/v2/suggestion",
+            type: "get",
+            data: "query=" + address + "&region=" + region + "&city_limit=true&output=json&ak=MVX9n2erFcFAZIDp8yw3ICCpozbvmtwP",
+            dataType: "jsonp",
+            async: false,
+            success: function(data){
+                $('#lat').val(data.result[0].location.lat);
+                $('#lng').val(data.result[0].location.lng);
+                $('#fr').attr('src', "./baidu_map.html?lat=" + $('#lat').val() + "&lng=" + $('#lng').val() +"&region=" + region + "&address=" + address);
+            }
+        });
+    })
+    $('#stationPut').click(function(){
+        var lat = $('#lat').val();
+        var lng = $('#lng').val();
+        var comment = $('#comment').val();
+        var region = $('#region').val();
+        var merchant_id = 1;
+        var name = $('#addressName').val();
+        $.ajax({
+            url: "http://180.76.141.171:81/station/create",
+            type: "post",
+            dataType: "json",
+            data: {"lat": lat, "lng": lng, "comment": comment, "region_name": region, "name": name },
+            async: "false",
+            success: function(data){
+                alert(data.msg);
+                window.location.href = "./station_list.html";
+            }
+        });
+    })
+    var region = [];
+    $.ajax({
+        url: "http://180.76.141.171/station/first",
+        type: "post",
+        dataType: "json",
+        async: "false",
+        success: function (data) {
+            for (var i = 0; i < data.data.regions.length; i++) {
+                region[i] = data.data.regions[i].name;
+            }
+            $('#region').autocomplete({
+                source: region
+            });
+        }
+    });
+}
+
+function riderExamine(){
+    $.ajax({
+        url:'http://180.76.141.171:81/review/rider',
+        type:'get',
+        dataType: 'json',
+        success:function(data){
+            var table=$("#example1 tbody")[0];
+            var riders=data.riders;
+            for(var i=0;i<riders.length;i++)
+            {
+                var tr=$("<tr></tr>");
+                tr.appendTo(table);
+                $("<td align='center'>"+riders[i].id+"</td>").appendTo(tr);
+                $("<td align='center'>"+riders[i].name+"</td>").appendTo(tr);
+                $("<td align='center'>"+riders[i].mobile+"</td>").appendTo(tr);
+                $("<td align='center'>"+riders[i].sex+"</td>").appendTo(tr);
+                $('<td>'+riders[i].license_num+'</td>').appendTo(tr);
+                $('<td>'+riders[i].created_at+'</td>').appendTo(tr);
+                //操作
+                $('<td><button class="btn btn-danger btn-xs examine">审核</button></td>').appendTo(tr);
+            }
+            $(".examine").each(function(event){
+                $(this).click(function(event){
+                    var rider_id = $(this).parent().siblings(":first").text();
+                    $.ajax({
+                        url:'http://180.76.141.171:81/post/rider',
+                        type:'post',
+                        dataType: 'json',
+                        data: {"rider_id": rider_id},
+                        success:function(data){
+                            if(data.status==0){
+                                alert("审核成功");
+                                window.location.reload();
+                            }
+                        },
+                        error:function(){
+                            alert("error");
+                        }
+                    });
+                });
+            });
+        },
+        error:function(){
+            alert("error");
+        }
+    });
+}
+
+function riderList(){
+    $.ajax({
+        url:'http://180.76.141.171:81/manage/rider',
+        type:'get',
+        dataType: 'json',
+        success:function(data){
+            var table=$("#example1 tbody")[0]
+
+            var rider_list=data.riders;//admins
+
+            var tr=$("<tr></tr>");
+            tr.appendTo(table);
+            for(var i=0;i<rider_list.length;i++)
+            {
+                var tr=$("<tr></tr>");
+                tr.appendTo(table);
+
+                //添加id
+                var td_rider_id=$("<td align='center'>"+rider_list[i].id+"</td>");
+                td_rider_id.appendTo(tr);
+                //name
+                $("<td align='center'>"+rider_list[i].name+"</td>").appendTo(tr);
+                //mobile
+                $("<td align='center'>"+rider_list[i].mobile+"</td>").appendTo(tr);
+                //sex
+                $("<td align='center'>"+rider_list[i].sex+"</td>").appendTo(tr);
+                //license_num
+                $("<td align='center'>"+rider_list[i].license_num+"</td>").appendTo(tr);
+
+                //card
+                $('<td><img src="'+rider_list[i].id_front+'" width="30" height="30"></td>').appendTo(tr);
+                //card
+                $('<td><img src="'+rider_list[i].id_back+'" width="30" height="30"></td>').appendTo(tr);
+
+                //操作
+                if(rider_list[i].is_del==0){
+                    $('<td><button class="btn btn-danger btn-xs stop">禁用</button>|<button class="btn btn-danger btn-xs  station">站点</button></td>').appendTo(tr);
+                }else{
+                    $('<td><button class="btn btn-danger btn-xs active">恢复</button>|<button class="btn btn-danger btn-xs  station">站点</button></td>').appendTo(tr);
+                }
+            }
+
+            $(".stop").each(function(event){
+                $(this).click(function(event){
+
+                    var rider_id = $(this).parent().siblings(":first").text();
+
+                    $.ajax({
+                        url:'http://180.76.141.171:81/stop/rider',
+                        type:'post',
+                        dataType: 'json',
+                        data: {"rider_id": rider_id},
+                        success:function(data){
+                            if(data.status==0){
+                                alert("禁用成功");
+                                window.location.href = "./rider_list.html";
+
+                            }
+                        },
+                        error:function(){
+                            alert("error");
+                        }
+                    });
+                });
+            });
+            $(".station").each(function(event){
+                $(this).click(function(event){
+
+                    var rider_id = $(this).parent().siblings(":first").text();
+                    localStorage.update_rider_id = rider_id;
+                    window.location.href = "./rider_stations_list.html";
+
+                });
+            });
+            $(".active").each(function(event){
+                $(this).click(function(event){
+
+                    var rider_id = $(this).parent().siblings(":first").text();
+
+                    $.ajax({
+                        url:'http://180.76.141.171:81/active/rider',
+                        type:'post',
+                        dataType: 'json',
+                        data: {"rider_id": rider_id},
+                        success:function(data){
+                            if(data.status==0){
+                                alert("恢复成功");
+                                window.location.href = "./rider_list.html";
+
+                            }
+                        },
+                        error:function(){
+                            alert("error");
+                        }
+                    });
+                });
+            });
+        },
+        error:function(){
+        }
+    });
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    var myAlert = $('#alert');
+    setTimeout(function(){
+        $("#info").slideUp(500);
+    }, 3000);
+}
+
+function productAdd(){
+    $("#add_product").click(function () {
+        var category_id = localStorage.update_category_id;
+        alert(category_id);
+        var name = $("#name").val();
+        var price = $("#price").val();
+        $.ajax({
+            type:"post",
+            dataType:'json',
+            url:"http://180.76.141.171:81/product/add",
+            data: {"category_id":category_id, "name": name, "price": price},
+            success:function(data){
+
+                if(data.status == 0){
+                    alert("修改成功！")
+                    window.location.href = "./product_list0.html";
+                }else{
+                    alert("something wrong")
+                }
+            }
+        });
+
+        return false;
+    });
+}
+
+function merchantList(){
+    $.ajax({
+        url: 'http://180.76.141.171:81/manage/merchant',
+        type: 'get',
+        dataType: 'json',
+        success: function (data) {
+            var table = $("#example1 tbody")[0]
+
+            var merchant_list = data.merchants;//admins
+            for (var i = 0; i < merchant_list.length; i++) {
+                var tr = $("<tr></tr>");
+                tr.appendTo(table);
+
+                //添加id
+                var td_merchant_id = $("<td>" + merchant_list[i].id + "</td>");
+                td_merchant_id.appendTo(tr);
+                //nick
+                $("<td>" + merchant_list[i].nick + "</td>").appendTo(tr);
+                $("<td>" + merchant_list[i].rename + "</td>").appendTo(tr);
+
+                $("<td>" + merchant_list[i].mobile + "</td>").appendTo(tr);
+
+                $("<td><img src='"+ merchant_list[i].card + "'  width='30' height='30'/></td>").appendTo(tr);
+
+                $("<td>" + merchant_list[i].sex + "</td>").appendTo(tr);
+
+                $("<td><img src='"+ merchant_list[i].logo + "'  width='30' height='30' /></td>").appendTo(tr);
+
+                if(merchant_list[i].status==0){
+                    $("<td>正常</td>").appendTo(tr);
+                }else{
+                    $("<td>异常</td>").appendTo(tr);
+                }
+
+                $("<td>" + merchant_list[i].comment + "</td>").appendTo(tr);
+
+
+                if(merchant_list[i].is_delete==0){
+                    $('<td><button class="btn btn-danger btn-xs stop">禁用</button>|<button class="btn btn-danger btn-xs station">站点</button></td>').appendTo(tr);
+                }else{
+                    $('<td><button class="btn btn-danger btn-xs active">恢复</button>|<button class="btn btn-danger btn-xs  station">站点</button></td>').appendTo(tr);
+                }
+                //
+                //$('<td><a class="btn btn-primary btn-xs" href="./admin_edit.html?this_admin_id=' + merchant_list[i].id + '">编辑</a><a class="btn btn-danger btn-xs" data="1" action="delete">删除</a></td>').appendTo(tr);
+            }
+            $(".stop").each(function(event){
+                $(this).click(function(event){
+
+                    var merchant_id = $(this).parent().siblings(":first").text();
+
+                    $.ajax({
+                        url:'http://180.76.141.171:81/stop/merchant',
+                        type:'post',
+                        dataType: 'json',
+                        data: {"merchant_id": merchant_id},
+                        success:function(data){
+                            if(data.status==0){
+                                alert("禁用成功");
+                                window.location.href = "./merchant_list.html";
+
+                            }
+                        },
+                        error:function(){
+                            alert("error");
+                        }
+                    });
+                });
+            });
+            $(".station").each(function(event){
+                $(this).click(function(event){
+
+                    var merchant_id = $(this).parent().siblings(":first").text();
+                    localStorage.update_merchant_id = merchant_id;
+                    window.location.href = "./merchant_stations_list.html";
+
+                });
+            });
+            $(".active").each(function(event){
+                $(this).click(function(event){
+
+                    var merchant_id = $(this).parent().siblings(":first").text();
+
+                    $.ajax({
+                        url:'http://180.76.141.171:81/active/merchant',
+                        type:'post',
+                        dataType: 'json',
+                        data: {"merchant_id": merchant_id},
+                        success:function(data){
+                            if(data.status==0){
+                                alert("恢复成功");
+                                window.location.href = "./merchant_list.html";
+
+                            }
+                        },
+                        error:function(){
+                            alert("error");
+                        }
+                    });
+                });
+            });
+        },
+        error: function () {
+            alert("error");
+        }
+    });
+}
+
+function priceEdit(){
+    var product_id = getURLQuery('product_id');
+    $('#product_id').val(product_id);
+    $.ajax({
+        url: "http://180.76.141.171:81/product/price/show",
+        type: "post",
+        data: "product_id=" + product_id,
+        dataType: "json",
+        async: "false",
+        success: function(data){
+            if (data.status != 0){
+                alert('暂时还没有商户定价');
+                window.location.href="./product_list0.html";
+            } else {
+                var price = data.data.count;
+                var name = data.data.product.name;
+                $('#product_name').text(name);
+                $('#middle_price').text(price);
+                $('#price1').attr('placeholder', data.data.product.price1);
+                $('#price2').attr('placeholder', data.data.product.price2);
+                $('#price3').attr('placeholder', data.data.product.price3);
+                $('#price4').attr('placeholder', data.data.product.price4);
+                $('#price5').attr('placeholder', data.data.product.price5);
+                $('#price6').attr('placeholder', data.data.product.price6);
+            }
+        }
+    })
+
+    $('button[name=save]').click(function(){
+        var jsonData = {};
+        jsonData.price1 = $('#price1').val();
+        jsonData.price2 = $('#price2').val();
+        jsonData.price3 = $('#price3').val();
+        jsonData.price4 = $('#price4').val();
+        jsonData.price5 = $('#price5').val();
+        jsonData.price6 = $('#price6').val();
+        jsonData.product_id = $('#product_id').val();
+        $.ajax({
+            url: "http://180.76.141.171:81/product/price/add",
+            type: "post",
+            data: jsonData,
+            dataType: "json",
+            async: "false",
+            success: function(data){
+                if (data.status == 0){
+                    alert("添加成功");
+                    window.location.reload();
+                } else {
+                    alert("添加失败");
+                }
+            }
+        })
+    })
+}
+
+function merchantExamine(){
+    $.ajax({
+        url:'http://180.76.141.171:81/review/merchant',
+        type:'get',
+        dataType: 'json',
+        success:function(data){
+            var table=$("#example1 tbody")[0]
+
+            var merchant_list=data.merchants;//admins
+
+            var tr=$("<tr></tr>");
+            tr.appendTo(table);
+            for(var i=0;i<merchant_list.length;i++)
+            {
+                var tr=$("<tr></tr>");
+                tr.appendTo(table);
+                //添加id
+                var td_merchant_id=$("<td align='center'>"+merchant_list[i].id+"</td>");
+                td_merchant_id.appendTo(tr);
+                //nick
+                $("<td align='center'>"+merchant_list[i].nick+"</td>").appendTo(tr);
+                //mobile
+                $("<td align='center'>"+merchant_list[i].mobile+"</td>").appendTo(tr);
+                //mail
+                $("<td align='center'>"+merchant_list[i].mail+"</td>").appendTo(tr);
+                //license
+                $('<td><img src="'+merchant_list[i].license+'" width="30" height="30"></td>').appendTo(tr);
+                //card
+                $('<td><img src="'+merchant_list[i].card+'" width="30" height="30"></td>').appendTo(tr);
+
+                //操作
+                $('<td><button class="btn btn-danger btn-xs examine">审核</button></td>').appendTo(tr);
+            }
+
+            $(".examine").each(function(event){
+                $(this).click(function(event){
+
+                    var merchant_id = $(this).parent().siblings(":first").text();
+
+                    $.ajax({
+                        url:'http://180.76.141.171:81/post/merchant',
+                        type:'post',
+                        dataType: 'json',
+                        data: {"merchant_id": merchant_id},
+                        success:function(data){
+                            if(data.status==0){
+                                alert("审核成功");
+                                window.location.href = "./merchant_examine.html";
+                            }
+                        },
+                        error:function(){
+                            alert("error");
+                        }
+                    });
+                });
+            });
+        },
+        error:function(){
+            alert("error");
+        }
+    });
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    var myAlert = $('#alert');
+    setTimeout(function(){
+        $("#info").slideUp(500);
+    }, 3000);
+    $(document).ready(function(){
+        $(".examine").each(function(index, element){
+            element.unbind("click"); // unbind binded event handler at first　
+            element.bind("click", function(){alert("click");});
+        });
+    });
+}
+
+function logList(){
+    $.ajax({
+        url: 'http://180.76.141.171:81/logs',
+        type: 'post',
+        dataType: 'json',
+        success: function (data) {
+            var table = $("tbody")[0];
+            var logs = data.data.logs;//admins
+            for (var i = 0; i < logs.length; i++) {
+                var tr = $("<tr></tr>");
+                tr.appendTo(table);
+                $("<td>" + logs[i].id + "</td>").appendTo(tr);
+                $("<td>" + logs[i].user_card_id + "</td>").appendTo(tr);
+                $("<td>" + logs[i].real_money + "</td>").appendTo(tr);
+                $("<td>" + logs[i].fake_money + "</td>").appendTo(tr);
+                $("<td>" + logs[i].method + "</td>").appendTo(tr);
+                $("<td>" + logs[i].created_at + "</td>").appendTo(tr);
+                $("<td>" + logs[i].updated_at + "</td>").appendTo(tr);
+            }
+        },
+        error: function () {
+            alert("error");
+        }
+    });
+}
+
+function couponList(){
+    $.ajax({
+        url: 'http://180.76.141.171:81/coupon/show',
+        type: 'post',
+        dataType: 'json',
+        success: function (data) {
+            var table = $("tbody")[0];
+            var coupons = data.data.coupons;//admins
+            for (var i = 0; i < coupons.length; i++) {
+                var tr = $("<tr></tr>");
+                tr.appendTo(table);
+                $("<td>" + coupons[i].id + "</td>").appendTo(tr);
+                $("<td>" + coupons[i].name + "</td>").appendTo(tr);
+                $("<td>" + coupons[i].from + "</td>").appendTo(tr);
+                $("<td>" + coupons[i].to + "</td>").appendTo(tr);
+                $("<td>" + coupons[i].price + "</td>").appendTo(tr);
+                $("<td>" + coupons[i].discount + "</td>").appendTo(tr);
+            }
+        },
+        error: function () {
+            alert("error");
+        }
+    });
+}
+
+function categoryList(){
+    $.ajax({
+        url: 'http://180.76.141.171:81/category/list',
+        type: 'get',
+        dataType: 'json',
+        success: function (data) {
+            var table = $("#example1 tbody")[0]
+            var category_list = data.data.categories;//admins
+            for (var i = 0; i < category_list.length; i++) {
+                var tr = $("<tr></tr>");
+                tr.appendTo(table);
+                var td_category_id = $("<td>" + category_list[i].id + "</td>");
+                td_category_id.appendTo(tr);
+                $("<td>" + category_list[i].name + "</td>").appendTo(tr);
+                $('<td><img src="'+category_list[i].logo+'" width="30" height="30"></td>').appendTo(tr);
+                $("<td>" + category_list[i].created_at + "</td>").appendTo(tr);
+                $("<td>" + category_list[i].created_at + "</td>").appendTo(tr);
+                if (category_list[i].is_delete == 0) {
+                    $("<td>可用</td>").appendTo(tr);
+                } else {
+                    $("<td>不可用</td>").appendTo(tr);
+                }
+                $('<td><a class="btn btn-danger btn-xs delete">删除</a>|<a class="btn btn-success btn-xs update"> 修改</a>|<a class="btn btn-adn btn-xs product"> 产品</a></td>').appendTo(tr);
+            }
+            $(".delete").each(function(event){
+                $(this).click(function(event){
+                    var category_id = $(this).parent().siblings(":first").text();
+                    $.ajax({
+                        url:'http://180.76.141.171:81/category/stop',
+                        type:'post',
+                        dataType: 'json',
+                        data: {"category_id": category_id},
+                        success:function(data){
+                            if(data.status==0){
+                                alert("删除成功");
+                                window.location.href = "./category_list0.html";
+                            }
+                        },
+                        error:function(){
+                            alert("删除失败");
+                        }
+                    });
+                });
+            });
+            $(".update").each(function(event){
+                $(this).click(function(event){
+                    var category_id = $(this).parent().siblings(":first").text();
+                    localStorage.update_category_id = category_id;
+                    window.location.href = "./category_edit0.html";
+                });
+            });
+            $(".product").each(function(event){
+                $(this).click(function(event){
+                    var category_id = $(this).parent().siblings(":first").text();
+                    localStorage.update_category_id = category_id;
+                    window.location.href = "./product_list0.html";
+                });
+            });
+        },
+        error: function () {
+            alert("error");
+        }
+    });
+}
+
+function couponCreate(){
+    $('#from').datetimepicker();
+    $('#to').datetimepicker();
+    $('#couponInput').click(function(){
+        var dataJson = {};
+        dataJson.name = $('#name').val();
+        dataJson.from = $('.from').val();
+        dataJson.to = $('.to').val();
+        dataJson.price = $('#price').val();
+        dataJson.discount = $('#discount').val();
+        $.ajax({
+            url:'http://180.76.141.171:81/coupon/create',
+            type:'post',
+            data: dataJson,
+            dataType: 'json',
+            success:function(data){
+                if(data.status==0){
+                    alert("建立成功");
+                }
+            },
+            error:function(){
+                alert("建立失败");
+            }
+        })
+    });
+}
+
+function categoryEdit(){
+    $("#edit_category").click(function () {
+        var category_id = localStorage.update_category_id;
+        alert(category_id);
+        var name = $("#name").val();
+        $.ajax({
+            type:"post",
+            dataType:'json',
+            url:"http://180.76.141.171:81/category/edit",
+            data: {"category_id":category_id, "name": name},
+            success:function(data){
+                if(data.status == 0){
+                    alert("修改成功！")
+                    window.location.href = "./category_list0.html";
+                }else{
+                    alert("something wrong")
+                }
+            }
+        });
+        return false;
+    });
+}
+
+function categoryAdd(){
+    var region = [];
+    $.ajax({
+        url: "http://180.76.141.171/station/first",
+        type: "post",
+        dataType: "json",
+        async: "false",
+        success: function (data) {
+            for (var i = 0; i < data.data.regions.length; i++) {
+                region[i] = data.data.regions[i].name;
+            }
+            $('#region1').autocomplete({
+                source: region
+            })
+            $('#region2').autocomplete({
+                source: region
+            })
+            $('#region3').autocomplete({
+                source: region
+            })
+            $('#region4').autocomplete({
+                source: region
+            })
+            $('#region5').autocomplete({
+                source: region
+            })
+            $('#region6').autocomplete({
+                source: region
+            })
+        }
+    });
+
+    $('#submitButton').click(function(){
+        var url = 'http://180.76.141.171:81/category/add';
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url:url,
+            cache: false,
+            data: new FormData($('#registerForm')[0]),
+            processData: false,
+            contentType: false,
+            async: false,
+            error: function(request) {
+                alert("Connection error");
+            },
+            success: function(data) {
+                alert(data.msg);
+                if (data.status=='0') {
+                    alert("添加成功！");
+                    window.location.href = "./category_list0.html";
+                }else{
+                    alert('添加失败，重新来过！');
+                }
+            }
+        });
+        return false;
+    });
+
+}
+
+//获取url中的参数
+function GetRequest() {
+    var url = location.search; //获取url中"?"符后的字串
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+        var str = url.substr(1);
+        strs = str.split("&");
+        for(var i = 0; i < strs.length; i ++) {
+            theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+        }
+    }
+    return theRequest;
+}
+
+function adminLogin(){
+    $(function () {
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: 'iradio_square-blue',
+            increaseArea: '20%' // optional
+        });
+
+        $("#login_sub").click(function () {
+            var nick = $('#nick').val();
+            var password = $("#password").val();
+            $.ajax({
+                type:"post",
+                dataType:'json',
+                url:"http://180.76.141.171:81/login",
+                data: {"nick": nick, "password": password},
+                success:function(data){
+                    if(data.msg=="success"){
+                        localStorage.a_id = data.data.admin.id;
+                        localStorage.a_nick = data.data.admin.nick;
+                        localStorage.is_del = data.data.admin.is_del;
+                        localStorage.role_id = data.data.admin.role_id;
+                        window.location.href = "./welcome.html";
+                    }else if(data.msg=="fail"){
+                        alert("账号或者密码错误")
+                    }
+                },
+                error: function(){
+                    alert("fuck");
+                }
+            });
+            return false;
+        });
+    });
+}
+
+function adminList(){
+    $.ajax({
+        url: 'http://180.76.141.171:81/show/admin',
+        type: 'get',
+        dataType: 'json',
+        success: function (data) {
+            var table = $("#example1 tbody")[0]
+
+            var admin_list = data.data;//admins
+            for (var i = 0; i < admin_list.length; i++) {
+                var tr = $("<tr></tr>");
+                tr.appendTo(table);
+
+                //添加id
+                var td_admin_id = $("<td>" + admin_list[i].id + "</td>");
+                td_admin_id.appendTo(tr);
+                //nick
+                $("<td>" + admin_list[i].nick + "</td>").appendTo(tr);
+                //状态
+                if (admin_list[i].is_del == 0) {
+                    $("<td>可用</td>").appendTo(tr);
+                } else {
+                    $("<td>不可用</td>").appendTo(tr);
+                }
+                //创建时间
+                $("<td>" + admin_list[i].created_at + "</td>").appendTo(tr);
+                //更新时间
+                $("<td>" + admin_list[i].created_at + "</td>").appendTo(tr);
+                //角色
+                if (admin_list[i].role_id == 1) {
+                    $("<td>超管</td>").appendTo(tr);
+                }else {
+                    $("<td>运营</td>").appendTo(tr);
+                }
+                //
+                //$('<td><a class="btn btn-primary btn-xs" href="./admin_edit.html?this_admin_id=' + admin_list[i].id + '">编辑</a><a class="btn btn-danger btn-xs" data="1" action="delete">删除</a></td>').appendTo(tr);
+                $('<td><a class="btn btn-danger btn-xs delete">删除</a>|<a class="btn btn-success btn-xs update"> 修改</a></td>').appendTo(tr);
+
+            }
+
+            $(".delete").each(function(event){
+                $(this).click(function(event){
+
+                    var admin_id = $(this).parent().siblings(":first").text();
+
+                    $.ajax({
+                        url:'http://180.76.141.171:81/remove/admin',
+                        type:'post',
+                        dataType: 'json',
+                        data: {"admin_id": admin_id},
+                        success:function(data){
+                            if(data.status==0){
+                                window.location.href = "./admin_list.html";
+                                alert("删除成功");
+                            }
+                        },
+                        error:function(){
+                            alert("删除失败");
+                        }
+                    });
+                });
+            });
+            $(".update").each(function(event){
+                $(this).click(function(event){
+
+                    var admin_id = $(this).parent().siblings(":first").text();
+                    localStorage.update_admin_id = admin_id;
+                    window.location.href = "./admin_edit0.html";
+
+                });
+            });
+
+        },
+        error: function () {
+            alert("error");
+        }
+    });
 }
 
 function adminAdd(){
@@ -177,10 +1442,10 @@ function adminAdd(){
                 }
             }
         });
-
         return false;
     });
 }
+
 
 function areaStatic() {
     var url = 'http://180.76.141.171:81/statistic/sex';
@@ -374,7 +1639,7 @@ $('a[action="delete"]').on('click', function () {
             }
         },
         error: function () {
-
+            alert('error');
         }
     });
 });
@@ -427,8 +1692,6 @@ function riderStationList() {
 
                 });
             });
-
-
         },
         error: function () {
             alert("error");
@@ -502,7 +1765,6 @@ function merchantStationAdd() {
             }
             $(".bind").each(function(event){
                 $(this).click(function(event){
-
                     var station_id = $(this).parent().siblings(":first").text();
                     $.ajax({
                         url:'http://180.76.141.171:81/merchant/bind',
@@ -521,7 +1783,6 @@ function merchantStationAdd() {
                     });
                 });
             });
-
         },
         error: function () {
             alert("error");

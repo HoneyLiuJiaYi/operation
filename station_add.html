@@ -4,7 +4,7 @@
     
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="znTlEIsix2DS0LyjKoCjMLEpZOrgDN2gNVaogKUW">
-    <title>站点建立-享洗小组</title>
+    <title id="title">享洗小组-站点建立</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -138,7 +138,7 @@
                                 <label for="name" style="margin-top:7px;">纬度</label>
                                 <input type="text" id="lat" class="form-control" placeholder="禁止输入">
                             <div class="form-group" style="margin-top:20px;">
-                                <button type="button" class="btn btn-primary" onclick="putTo()" >创建</button>
+                                <button type="button" class="btn btn-primary" id="stationPut" >创建</button>
                                 <button type="reset" class="btn btn-danger">重置</button>
                             </div>
 
@@ -151,7 +151,6 @@
                         </iframe>
 
                     </div>
-                        <button type="button" class="btn btn-primary" style="margin-top:20px;margin-left:20px;width:440px" name="save">查看</button>
                     <input type="hidden" value="39.915119" id="inLat"/>
                     <input type="hidden" value="116.403963" id="inLng"/>
                 </div><!-- /.box -->
@@ -217,107 +216,4 @@
 <!--<script src="./public/dashboard.js"></script>-->
 AdminLTE for demo purposes
 <script src="./public/demo.js"></script>
-<script>
-var city = [];
-//var superURL = ofline + "/operation";
-$(document).ready(function(){
-    $('#fr').attr("src", "./baidu_map.html");
-//    $('#fr').attr("src", superURL + "/baidu_map.html");
-})
-function changeCity(){
-    $.ajax({
-        url: 'http://api.map.baidu.com/place/v2/suggestion',
-        type: "get",
-        data: "query=" + $('#tags').val() + "&region=" + $('#region').val() + "&city_limit=true&output=json&ak=MVX9n2erFcFAZIDp8yw3ICCpozbvmtwP",
-        dataType: "jsonp",
-        async: 'false',
-        success: function(data){
-            for (var i = 0 ; i < data.result.length ; i++){
-                city[i] = data.result[i].name;
-                console.log(city[i]);
-            }
-            $('#tags').autocomplete({
-                source: city,
-                select: function(event, data){
-                    $.ajax({
-                        url: 'http://api.map.baidu.com/place/v2/suggestion',
-                        type: "get",
-                        data: "query=" + data.item.value + "&region=" + $('#region').val() + "&city_limit=true&output=json&ak=MVX9n2erFcFAZIDp8yw3ICCpozbvmtwP",
-                        dataType: "jsonp",
-                        async: 'false',
-                        success: function(data){
-                            $('#lat').val(data.result[0].location.lat);
-                            $('#lng').val(data.result[0].location.lng);
-                        }
-                    })
-                }
-            });
-        }
-    });
-}
-</script>
-<script>
-$('button[name=save]').click(function(){
-    baiduMapChange();
-});
-function baiduMapChange() {
-    var region = $('#region').val();
-    var address = $('#tags').val();
-    if (region == "" || region == undefined || region == null){
-        alert("区域不能为空");
-        return;
-    } else if(address == "" || address == undefined || address == null){
-        alert("具体地址不能为空");
-    }
-    $.ajax({
-        url: "https://api.map.baidu.com/place/v2/suggestion",
-        type: "get",
-        data: "query=" + address + "&region=" + region + "&city_limit=true&output=json&ak=MVX9n2erFcFAZIDp8yw3ICCpozbvmtwP",
-        dataType: "jsonp",
-        async: false,
-        success: function(data){
-            $('#lat').val(data.result[0].location.lat);
-            $('#lng').val(data.result[0].location.lng);
-            $('#fr').attr('src', "./baidu_map.html?lat=" + $('#lat').val() + "&lng=" + $('#lng').val() +"&region=" + region + "&address=" + address);
-        }
-    })
-}
-function putTo(){
-    var lat = $('#lat').val();
-    var lng = $('#lng').val();
-    var comment = $('#comment').val();
-    var region = $('#region').val();
-    var merchant_id = 1;
-    var name = $('#addressName').val();
-    $.ajax({
-        url: "http://180.76.141.171:81/station/create",
-        type: "post",
-        dataType: "json",
-//        data: "lat=" + lat + "&lng=" + lng + "&comment=" + comment + "&region_name=" + region + "&merchant_id=" + 1 + "&name=" + name,
-        data: {"lat": lat, "lng": lng, "comment": comment, "region_name": region, "name": name },
-        async: "false",
-        success: function(data){
-            alert(data.msg);
-            window.location.href = "./station_list.html";
-        }
-    })
-}
-</script>
-<script>
-    var region = [];
-    $.ajax({
-        url: "http://180.76.141.171/station/first",
-        type: "post",
-        dataType: "json",
-        async: "false",
-        success: function (data) {
-            for (var i = 0; i < data.data.regions.length; i++) {
-                region[i] = data.data.regions[i].name;
-            }
-            $('#region').autocomplete({
-                source: region
-            })
-        }
-    })
-</script>
 </body></html>

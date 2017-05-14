@@ -3,7 +3,7 @@
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>享洗小组-品类</title>
+    <title id="title">享洗小组-价格编辑</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -206,60 +206,6 @@
 <script src="./public/config.js"></script>
 
 <link rel="stylesheet" type="text/css" href="./public/stylesheets"><script type="text/javascript" src="./public/javascript"></script>
-<!--<script type="text/javascript">jQuery.noConflict(true);</script>-->
+<script type="text/javascript">jQuery.noConflict(true);</script>
 <div class="jvectormap-label"></div>
-<script>
-    var product_id = getURLQuery('product_id');
-    $('#product_id').val(product_id);
-    $.ajax({
-        url: "http://180.76.141.171:81/product/price/show",
-        type: "post",
-        data: "product_id=" + product_id,
-        dataType: "json",
-        async: "false",
-        success: function(data){
-            if (data.status != 0){
-                alert('暂时还没有商户定价');
-                window.location.href="./product_list0.html";
-            } else {
-                var price = data.data.count;
-                var name = data.data.product.name;
-                $('#product_name').text(name);
-                $('#middle_price').text(price);
-                $('#price1').attr('placeholder', data.data.product.price1);
-                $('#price2').attr('placeholder', data.data.product.price2);
-                $('#price3').attr('placeholder', data.data.product.price3);
-                $('#price4').attr('placeholder', data.data.product.price4);
-                $('#price5').attr('placeholder', data.data.product.price5);
-                $('#price6').attr('placeholder', data.data.product.price6);
-            }
-        }
-    })
-
-$('button[name=save]').click(function(){
-    var jsonData = {};
-    jsonData.price1 = $('#price1').val();
-    jsonData.price2 = $('#price2').val();
-    jsonData.price3 = $('#price3').val();
-    jsonData.price4 = $('#price4').val();
-    jsonData.price5 = $('#price5').val();
-    jsonData.price6 = $('#price6').val();
-    jsonData.product_id = $('#product_id').val();
-    $.ajax({
-        url: "http://180.76.141.171:81/product/price/add",
-        type: "post",
-        data: jsonData,
-        dataType: "json",
-        async: "false",
-        success: function(data){
-            if (data.status == 0){
-                alert("添加成功");
-                window.location.reload();
-            } else {
-                alert("添加失败");
-            }
-        }
-    })
-})
-</script>
 </body></html>

@@ -4,7 +4,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="znTlEIsix2DS0LyjKoCjMLEpZOrgDN2gNVaogKUW">
-    <title>享洗小组-骑手审核</title>
+    <title id="title">享洗小组-骑手审核</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -383,53 +383,6 @@
 
 <!-- AdminLTE for demo purposes -->
 <script src="./public/demo.js"></script><script src="./public/auth_admin.js"></script>
-<script>
-    $.ajax({
-        url:'http://180.76.141.171:81/review/rider',
-        type:'get',
-        dataType: 'json',
-        success:function(data){
-            var table=$("#example1 tbody")[0];
-            var riders=data.riders;
-            for(var i=0;i<riders.length;i++)
-            {
-                var tr=$("<tr></tr>");
-                tr.appendTo(table);
-                $("<td align='center'>"+riders[i].id+"</td>").appendTo(tr);
-                $("<td align='center'>"+riders[i].name+"</td>").appendTo(tr);
-                $("<td align='center'>"+riders[i].mobile+"</td>").appendTo(tr);
-                $("<td align='center'>"+riders[i].sex+"</td>").appendTo(tr);
-                $('<td>'+riders[i].license_num+'</td>').appendTo(tr);
-                $('<td>'+riders[i].created_at+'</td>').appendTo(tr);
-                //操作
-                $('<td><button class="btn btn-danger btn-xs examine">审核</button></td>').appendTo(tr);
-            }
-            $(".examine").each(function(event){
-                $(this).click(function(event){
-                    var rider_id = $(this).parent().siblings(":first").text();
-                    $.ajax({
-                        url:'http://180.76.141.171:81/post/rider',
-                        type:'post',
-                        dataType: 'json',
-                        data: {"rider_id": rider_id},
-                        success:function(data){
-                            if(data.status==0){
-                                alert("审核成功");
-                                window.location.reload();
-                            }
-                        },
-                        error:function(){
-                            alert("error");
-                        }
-                    });
-                });
-            });
-        },
-        error:function(){
-            alert("error");
-        }
-    });
-</script>
 <link rel="stylesheet" type="text/css" href="./public/stylesheets"><script type="text/javascript" src="./public/javascript"></script>
 
 <div class="jvectormap-label"></div>

@@ -4,7 +4,7 @@
     
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="znTlEIsix2DS0LyjKoCjMLEpZOrgDN2gNVaogKUW">
-    <title>享洗小组-工厂审核</title>
+    <title id="title">享洗小组-工厂审核</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -383,98 +383,8 @@
 
 <!-- AdminLTE for demo purposes -->
 <script src="./public/demo.js"></script><script src="./public/auth_admin.js"></script>
-<script>
-
-	$.ajax({
-		url:'http://180.76.141.171:81/review/merchant',
-		type:'get',
-		dataType: 'json',
-		success:function(data){
-			var table=$("#example1 tbody")[0]
-
-			var merchant_list=data.merchants;//admins
-			
-			var tr=$("<tr></tr>");
-			tr.appendTo(table);
-			for(var i=0;i<merchant_list.length;i++)
-			{
-				var tr=$("<tr></tr>");
-				tr.appendTo(table);
-				//添加id
-				var td_merchant_id=$("<td align='center'>"+merchant_list[i].id+"</td>");
-				td_merchant_id.appendTo(tr);
-				//nick
-				$("<td align='center'>"+merchant_list[i].nick+"</td>").appendTo(tr);
-				//mobile
-				$("<td align='center'>"+merchant_list[i].mobile+"</td>").appendTo(tr);
-				//mail
-				$("<td align='center'>"+merchant_list[i].mail+"</td>").appendTo(tr);
-				//license
-				$('<td><img src="'+merchant_list[i].license+'" width="30" height="30"></td>').appendTo(tr);
-				//card
-				$('<td><img src="'+merchant_list[i].card+'" width="30" height="30"></td>').appendTo(tr);
-				
-				//操作
-				$('<td><button class="btn btn-danger btn-xs examine">审核</button></td>').appendTo(tr);
-			}
-			
-			$(".examine").each(function(event){
-				$(this).click(function(event){
-					
-					var merchant_id = $(this).parent().siblings(":first").text();
-					
-					$.ajax({
-						url:'http://180.76.141.171:81/post/merchant',
-						type:'post',
-						dataType: 'json',
-						data: {"merchant_id": merchant_id},
-						success:function(data){
-							if(data.status==0){
-								alert("审核成功");
-								window.location.href = "./merchant_examine.html";
-							}
-						},
-						error:function(){
-							alert("error");
-						}
-					});
-				});
-			});
-		},
-		error:function(){
-			alert("error");
-		}
-	});
-
-	 $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-	var myAlert = $('#alert');
-    setTimeout(function(){
-        $("#info").slideUp(500);
-    }, 3000);
-	$(document).ready(function(){
-
-		$(".examine").each(function(index, element){　
-			element.unbind("click"); // unbind binded event handler at first　
-			element.bind("click", function(){alert("click");});
-		});
-
-	});
-	/*
-	$(document).ready(function(){
-		$('button.examine').live('click', function() { alert("click");});
-		});
-	
-	
-	*/
-
-	
-</script>
 <link rel="stylesheet" type="text/css" href="./public/stylesheets"><script type="text/javascript" src="./public/javascript"></script>
-<!--<script type="text/javascript">jQuery.noConflict(true);</script>-->
+<script type="text/javascript">jQuery.noConflict(true);</script>
 
 
 <div class="jvectormap-label"></div></body></html>
