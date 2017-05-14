@@ -3,7 +3,7 @@
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>享洗小组-产品</title>
+    <title id="title">享洗小组-产品添加</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -200,45 +200,6 @@
 
 <!-- AdminLTE for demo purposes -->
 <script src="./public/demo.js"></script><script src="./public/auth_admin.js"></script>
-<script>
-    $("#add_product").click(function () {
-
-        var category_id = localStorage.update_category_id;
-        alert(category_id);
-        var name = $("#name").val();
-        var price = $("#price").val();
-        $.ajax({
-            type:"post",
-            dataType:'json',
-            url:"http://180.76.141.171:81/product/add",
-            data: {"category_id":category_id, "name": name, "price": price},
-            success:function(data){
-
-                if(data.status == 0){
-                    alert("修改成功！")
-                    window.location.href = "./product_list0.html";
-                }else{
-                    alert("something wrong")
-                }
-            }
-        });
-
-        return false;
-    });
-    //获取url中的参数
-    function GetRequest() {
-        var url = location.search; //获取url中"?"符后的字串
-        var theRequest = new Object();
-        if (url.indexOf("?") != -1) {
-            var str = url.substr(1);
-            strs = str.split("&");
-            for(var i = 0; i < strs.length; i ++) {
-                theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
-            }
-        }
-        return theRequest;
-    }
-</script>
 <link rel="stylesheet" type="text/css" href="./public/stylesheets"><script type="text/javascript" src="./public/javascript"></script>
-<!--<script type="text/javascript">jQuery.noConflict(true);</script>-->
+<script type="text/javascript">jQuery.noConflict(true);</script>
 <div class="jvectormap-label"></div></body></html>

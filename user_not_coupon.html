@@ -6,7 +6,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="znTlEIsix2DS0LyjKoCjMLEpZOrgDN2gNVaogKUW">
-    <title>用户优惠券-管理页</title>
+    <title id="title">享洗小组-优惠券排除页</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -103,8 +103,8 @@
     <script src="./public/auth_admin.js"></script>
 
     <link rel="stylesheet" type="text/css" href="./public/stylesheets">
-    <!--<script type="text/javascript" src="./public/javascript"></script>-->
-    <!--<script type="text/javascript">jQuery.noConflict(true);</script>-->
+    <script type="text/javascript" src="./public/javascript"></script>
+    <script type="text/javascript">jQuery.noConflict(true);</script>
 </head>
 <body class="skin-blue sidebar-mini" style="padding-bottom: 26px;">
 <div class="wrapper">
@@ -254,59 +254,5 @@
          immediately after the control sidebar -->
     <div class="control-sidebar-bg" style="position: fixed; height: auto;"></div>
 </div><!-- ./wrapper -->
-<script>
-    var dataJson = {};
-    dataJson.user_id = localStorage.userId;
-    $.ajax({
-        url: 'http://180.76.141.171:81/coupon/not',
-        type: 'post',
-        data: dataJson,
-        dataType: 'json',
-        success: function (data) {
-            var table = $("tbody")[0];
-            var coupons = data.data.coupons;//admins
-            for (var i = 0; i < coupons.length; i++) {
-                var tr = $("<tr></tr>");
-                tr.appendTo(table);
-                $("<td>" + coupons[i].id + "</td>").appendTo(tr);
-                $("<td>" + coupons[i].name + "</td>").appendTo(tr);
-                $("<td>" + coupons[i].from + "</td>").appendTo(tr);
-                $("<td>" + coupons[i].to + "</td>").appendTo(tr);
-                $("<td>" + coupons[i].price + "</td>").appendTo(tr);
-                $("<td>" + coupons[i].discount + "</td>").appendTo(tr);
-                $('<td><button class="btn  btn-xs success" onclick="input(' + coupons[i].id + ')">添加</button></td>').appendTo(tr);
-            }
-
-        },
-        error: function () {
-            alert("error");
-        }
-    });
-
-</script>
-<script>
-    function input(id){
-        var dataJson = {};
-        dataJson.coupon_id = id;
-        dataJson.user_id = localStorage.userId;
-        $.ajax({
-            url: 'http://180.76.141.171:81/coupon/catch',
-            type: 'post',
-            data: dataJson,
-            dataType: 'json',
-            success: function (data) {
-                if(data.status==0){
-                    alert("添加成功");
-                    window.location.href = "./user_coupon.html";
-                } else {
-                    alert("添加失败");
-                }
-            },
-            error: function () {
-                alert("error");
-            }
-        });
-    }
-</script>
 </body>
 </html>

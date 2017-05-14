@@ -6,7 +6,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="znTlEIsix2DS0LyjKoCjMLEpZOrgDN2gNVaogKUW">
-    <title id="title">享洗小组-工厂管理</title>
+    <title id="title">享洗小组-工厂列表</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -618,115 +618,8 @@
 <!-- AdminLTE for demo purposes -->
 <script src="public/demo.js"></script>
 <script src="public/auth_admin.js"></script>
-<script>
-	$.ajax({
-		url: 'http://180.76.141.171:81/manage/merchant',
-		type: 'get',
-		dataType: 'json',
-		success: function (data) {
-			var table = $("#example1 tbody")[0]
-
-			var merchant_list = data.merchants;//admins
-			for (var i = 0; i < merchant_list.length; i++) {
-				var tr = $("<tr></tr>");
-				tr.appendTo(table);
-
-				//添加id
-				var td_merchant_id = $("<td>" + merchant_list[i].id + "</td>");
-				td_merchant_id.appendTo(tr);
-				//nick
-				$("<td>" + merchant_list[i].nick + "</td>").appendTo(tr);
-				$("<td>" + merchant_list[i].rename + "</td>").appendTo(tr);
-
-				$("<td>" + merchant_list[i].mobile + "</td>").appendTo(tr);
-
-				$("<td><img src='"+ merchant_list[i].card + "'  width='30' height='30'/></td>").appendTo(tr);
-
-				$("<td>" + merchant_list[i].sex + "</td>").appendTo(tr);
-
-				$("<td><img src='"+ merchant_list[i].logo + "'  width='30' height='30' /></td>").appendTo(tr);
-
-				if(merchant_list[i].status==0){
-					$("<td>正常</td>").appendTo(tr);
-				}else{
-					$("<td>异常</td>").appendTo(tr);
-				}
-
-				$("<td>" + merchant_list[i].comment + "</td>").appendTo(tr);
-
-
-				if(merchant_list[i].is_delete==0){
-					$('<td><button class="btn btn-danger btn-xs stop">禁用</button>|<button class="btn btn-danger btn-xs station">站点</button></td>').appendTo(tr);
-				}else{
-					$('<td><button class="btn btn-danger btn-xs active">恢复</button>|<button class="btn btn-danger btn-xs  station">站点</button></td>').appendTo(tr);
-				}
-				//
-				//$('<td><a class="btn btn-primary btn-xs" href="./admin_edit.html?this_admin_id=' + merchant_list[i].id + '">编辑</a><a class="btn btn-danger btn-xs" data="1" action="delete">删除</a></td>').appendTo(tr);
-			}
-			$(".stop").each(function(event){
-				$(this).click(function(event){
-
-					var merchant_id = $(this).parent().siblings(":first").text();
-
-					$.ajax({
-						url:'http://180.76.141.171:81/stop/merchant',
-						type:'post',
-						dataType: 'json',
-						data: {"merchant_id": merchant_id},
-						success:function(data){
-							if(data.status==0){
-								alert("禁用成功");
-                                window.location.href = "./merchant_list.html";
-
-							}
-						},
-						error:function(){
-							alert("error");
-						}
-					});
-				});
-			});
-            $(".station").each(function(event){
-                $(this).click(function(event){
-
-                    var merchant_id = $(this).parent().siblings(":first").text();
-                    localStorage.update_merchant_id = merchant_id;
-                    window.location.href = "./merchant_stations_list.html";
-
-                });
-            });
-			$(".active").each(function(event){
-				$(this).click(function(event){
-
-					var merchant_id = $(this).parent().siblings(":first").text();
-
-					$.ajax({
-						url:'http://180.76.141.171:81/active/merchant',
-						type:'post',
-						dataType: 'json',
-						data: {"merchant_id": merchant_id},
-						success:function(data){
-							if(data.status==0){
-								alert("恢复成功");
-                                window.location.href = "./merchant_list.html";
-
-							}
-						},
-						error:function(){
-							alert("error");
-						}
-					});
-				});
-			});
-		},
-		error: function () {
-			alert("error");
-		}
-	});
-</script>
-
 <script type="text/javascript" src="public/javascript"></script>
-<!--<script type="text/javascript">jQuery.noConflict(true);</script>-->
+<script type="text/javascript">jQuery.noConflict(true);</script>
 
 
 <div class="jvectormap-label"></div>

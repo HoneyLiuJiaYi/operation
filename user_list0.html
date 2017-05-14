@@ -6,7 +6,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="znTlEIsix2DS0LyjKoCjMLEpZOrgDN2gNVaogKUW">
-    <title>享洗小组-工厂管理</title>
+    <title id="title">享洗小组-用户列表页</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -242,114 +242,9 @@
 <!-- AdminLTE for demo purposes -->
 <script src="public/demo.js"></script>
 <script src="public/auth_admin.js"></script>
-<script>
-    $.ajax({
-        url: 'http://180.76.141.171:81/user/list',
-        type: 'get',
-        dataType: 'json',
-        success: function (data) {
-            var table = $("#example1 tbody")[0]
-            var user_list = data.data.users;//admins
-            for (var i = 0; i < user_list.length; i++) {
-                var tr = $("<tr></tr>");
-                tr.appendTo(table);
-                //添加id
-                var td_merchant_id = $("<td>" + user_list[i].id + "</td>");
-                td_merchant_id.appendTo(tr);
-                //nick
-                $("<td>" + user_list[i].name + "</td>").appendTo(tr);
-                $("<td>" + user_list[i].sex + "</td>").appendTo(tr);
-
-                $("<td>" + user_list[i].mobile + "</td>").appendTo(tr);
-                if(user_list[i].is_del==0){
-                    $("<td>正常</td>").appendTo(tr);
-                }else{
-                    $("<td>异常</td>").appendTo(tr);
-                }
-                if(user_list[i].is_del==0){
-                    $('<td><button class="btn btn-danger btn-xs stop">禁用</button>' + '<button class="btn  btn-xs success" style="margin-left:10px;" onclick="chong(' + user_list[i].id + ')">充钱</button></td>').appendTo(tr);
-                }else{
-                    $('<td><button class="btn btn-danger btn-xs active">恢复</button>' + '<button class="btn  btn-xs success" style="margin-left:10px;" onclick="chong(' + user_list[i].id + ')">充钱</button></td>').appendTo(tr);
-                }
-                $('<td><button class="btn  btn-xs success" onclick="coupon(' + user_list[i].id + ')">查券</button></td>').appendTo(tr);
-                //
-                //$('<td><a class="btn btn-primary btn-xs" href="./admin_edit.html?this_admin_id=' + user_list[i].id + '">编辑</a><a class="btn btn-danger btn-xs" data="1" action="delete">删除</a></td>').appendTo(tr);
-            }
-            $(".stop").each(function(event){
-                $(this).click(function(event){
-
-                    var user_id = $(this).parent().siblings(":first").text();
-
-                    $.ajax({
-                        url:'http://180.76.141.171:81/user/stop',
-                        type:'post',
-                        dataType: 'json',
-                        data: {"user_id": user_id},
-                        success:function(data){
-                            if(data.status==0){
-                                alert("禁用成功");
-                                window.location.href = "./user_list0.html";
-
-                            }
-                        },
-                        error:function(){
-                            alert("error");
-                        }
-                    });
-                });
-            });
-
-            $(".active").each(function(event){
-                $(this).click(function(event){
-
-                    var user_id = $(this).parent().siblings(":first").text();
-
-                    $.ajax({
-                        url:'http://180.76.141.171:81/user/active',
-                        type:'post',
-                        dataType: 'json',
-                        data: {"user_id": user_id},
-                        success:function(data){
-                            if(data.status==0){
-                                alert("恢复成功");
-                                window.location.href = "./user_list0.html";
-                            }
-                        },
-                        error:function(){
-                            alert("error");
-                        }
-                    });
-                });
-            });
-        },
-        error: function () {
-            alert("error");
-        }
-    });
-</script>
-<script>
-    var myAlert = $('#alert');
-    setTimeout(function () {
-        $("#info").slideUp(500);
-    }, 3000);
-</script>
-<script>
-    function chong(id){
-        localStorage.userId = id;
-        window.location.href="./user_card.html"
-    }
-</script>
-<script>
-    function coupon(id){
-        localStorage.userId = id;
-        window.location.href = "./user_coupon.html";
-    }
-</script>
 <link rel="stylesheet" type="text/css" href="public/stylesheets">
 <script type="text/javascript" src="public/javascript"></script>
-<!--<script type="text/javascript">jQuery.noConflict(true);</script>-->
-
-
+<script type="text/javascript">jQuery.noConflict(true);</script>
 <div class="jvectormap-label"></div>
 </body>
 </html>

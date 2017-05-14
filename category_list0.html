@@ -6,7 +6,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="znTlEIsix2DS0LyjKoCjMLEpZOrgDN2gNVaogKUW">
-    <title>享洗小组-管理员管理页</title>
+    <title id="title">享洗小组-品类列表页</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -101,73 +101,9 @@
     <!-- AdminLTE for demo purposes -->
     <script src="./public/demo.js">
     </script><script src="./public/auth_admin.js"></script>
-    <script>
-        $.ajax({
-            url: 'http://180.76.141.171:81/category/list',
-            type: 'get',
-            dataType: 'json',
-            success: function (data) {
-                var table = $("#example1 tbody")[0]
-                var category_list = data.data.categories;//admins
-                for (var i = 0; i < category_list.length; i++) {
-                    var tr = $("<tr></tr>");
-                    tr.appendTo(table);
-                    var td_category_id = $("<td>" + category_list[i].id + "</td>");
-                    td_category_id.appendTo(tr);
-                    $("<td>" + category_list[i].name + "</td>").appendTo(tr);
-                    $('<td><img src="'+category_list[i].logo+'" width="30" height="30"></td>').appendTo(tr);
-                    $("<td>" + category_list[i].created_at + "</td>").appendTo(tr);
-                    $("<td>" + category_list[i].created_at + "</td>").appendTo(tr);
-                    if (category_list[i].is_delete == 0) {
-                        $("<td>可用</td>").appendTo(tr);
-                            } else {
-                                $("<td>不可用</td>").appendTo(tr);
-                        }
-                            $('<td><a class="btn btn-danger btn-xs delete">删除</a>|<a class="btn btn-success btn-xs update"> 修改</a>|<a class="btn btn-adn btn-xs product"> 产品</a></td>').appendTo(tr);
-                        }
-                            $(".delete").each(function(event){
-                                $(this).click(function(event){
-                                    var category_id = $(this).parent().siblings(":first").text();
-                                    $.ajax({
-                                        url:'http://180.76.141.171:81/category/stop',
-                                        type:'post',
-                                        dataType: 'json',
-                                        data: {"category_id": category_id},
-                                        success:function(data){
-                                if(data.status==0){
-                                    alert("删除成功");
-                                    window.location.href = "./category_list0.html";
-                                }
-                            },
-                            error:function(){
-                                alert("删除失败");
-                            }
-                        });
-                    });
-                });
-                $(".update").each(function(event){
-                    $(this).click(function(event){
-                        var category_id = $(this).parent().siblings(":first").text();
-                        localStorage.update_category_id = category_id;
-                        window.location.href = "./category_edit0.html";
-                    });
-                });
-                $(".product").each(function(event){
-                    $(this).click(function(event){
-                        var category_id = $(this).parent().siblings(":first").text();
-                        localStorage.update_category_id = category_id;
-                        window.location.href = "./product_list0.html";
-                    });
-                });
-            },
-            error: function () {
-                alert("error");
-            }
-        });
-    </script>
     <link rel="stylesheet" type="text/css" href="./public/stylesheets">
     <script type="text/javascript" src="./public/javascript"></script>
-   <!-- <script type="text/javascript">jQuery.noConflict(false);</script>-->
+    <script type="text/javascript">jQuery.noConflict(false);</script>
 </head>
 <body class="skin-blue sidebar-mini" style="padding-bottom: 26px;">
 <div class="wrapper">

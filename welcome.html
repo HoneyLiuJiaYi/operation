@@ -4,7 +4,7 @@
     
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="znTlEIsix2DS0LyjKoCjMLEpZOrgDN2gNVaogKUW">
-    <title>享洗小组-管理员管理页</title>
+    <title id="title">享洗小组-首页</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -146,51 +146,8 @@
 
 <!-- AdminLTE for demo purposes -->
 <script src="./public/demo.js"></script><script src="./public/auth_admin.js"></script>
-<script>
-
-
-    var myAlert = $('#alert');
-    setTimeout(function(){
-        $("#info").slideUp(500);
-    }, 3000);
-
-    $('a[action="delete"]').on('click',function(){
-        var id = $(this).attr('data');
-        var me = $(this).parent().parent();
-
-        $.ajax({
-            url:''+id,
-            type:'delete',
-            dataType: 'json',
-            success:function(data){
-                console.log(typeof(data.code));
-                switch(data.code){
-                    case 0:
-                        me.remove();
-                        myAlert.removeClass('callout-danger');
-                        myAlert.addClass('callout-success');
-                        myAlert.find('p[name="content"]').html('删除成功');
-                    break;
-                    case 1:
-                        myAlert.removeClass('callout-success');
-                        myAlert.addClass('callout-danger');
-                        myAlert.find('p[name="content"]').html('删除失败');
-                    break;
-                }
-                myAlert.removeClass('hide');
-                myAlert.stop(true,true).slideDown();
-                setTimeout(function(){
-                    myAlert.stop(true,true).slideUp(500);
-                },1000);
-            },
-            error:function(){
-
-            }
-        });
-    });
-</script>
 <link rel="stylesheet" type="text/css" href="./public/stylesheets"><script type="text/javascript" src="./public/javascript"></script>
-    <!--<script type="text/javascript">jQuery.noConflict(true);</script>-->
+    <script type="text/javascript">jQuery.noConflict(true);</script>
 
 
 

@@ -4,7 +4,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="znTlEIsix2DS0LyjKoCjMLEpZOrgDN2gNVaogKUW">
-    <title>站点建立-享洗小组</title>
+    <title id="title">享洗小组-优惠券建立</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -148,7 +148,7 @@
                                         <label for="name" style="margin-top:7px;" >discount</label>
                                         <input type="text" class="form-control" style="margin-top:7px;"  placeholder="请输入详情" id="discount" >
                                         <div class="form-group" style="margin-top:20px;">
-                                            <button type="button" class="btn btn-primary" onclick="putTo()" >建立优惠券</button>
+                                            <button type="button" class="btn btn-primary" id="couponInput" >建立优惠券</button>
                                         </div>
 
                                     </div><!-- /.box-body -->
@@ -217,32 +217,4 @@
 <!--<script src="./public/dashboard.js"></script>-->
 AdminLTE for demo purposes
 <script src="./public/demo.js"></script>
-<script>
-    $('#from').datetimepicker();
-    $('#to').datetimepicker();
-</script>
-<script>
-    function putTo(){
-        var dataJson = {};
-        dataJson.name = $('#name').val();
-        dataJson.from = $('.from').val();
-        dataJson.to = $('.to').val();
-        dataJson.price = $('#price').val();
-        dataJson.discount = $('#discount').val();
-        $.ajax({
-            url:'http://180.76.141.171:81/coupon/create',
-            type:'post',
-            data: dataJson,
-            dataType: 'json',
-            success:function(data){
-                if(data.status==0){
-                    alert("建立成功");
-                }
-            },
-            error:function(){
-                alert("建立失败");
-            }
-        })
-    }
-</script>
 </body></html>

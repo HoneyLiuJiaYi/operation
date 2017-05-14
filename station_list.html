@@ -6,7 +6,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="znTlEIsix2DS0LyjKoCjMLEpZOrgDN2gNVaogKUW">
-    <title>享洗小组-站点管理页</title>
+    <title id="title">享洗小组-站点列表页</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -103,8 +103,8 @@
     <script src="./public/auth_admin.js"></script>
 
     <link rel="stylesheet" type="text/css" href="./public/stylesheets">
-    <!--<script type="text/javascript" src="./public/javascript"></script>-->
-    <!--<script type="text/javascript">jQuery.noConflict(true);</script>-->
+    <script type="text/javascript" src="./public/javascript"></script>
+    <script type="text/javascript">jQuery.noConflict(true);</script>
 </head>
 <body class="skin-blue sidebar-mini" style="padding-bottom: 26px;">
 <div class="wrapper">
@@ -255,69 +255,5 @@
          immediately after the control sidebar -->
     <div class="control-sidebar-bg" style="position: fixed; height: auto;"></div>
 </div><!-- ./wrapper -->
-<script>
-    $.ajax({
-        url: 'http://180.76.141.171:81/station/all',
-        type: 'get',
-        dataType: 'json',
-        success: function (data) {
-            var table = $("tbody")[0];
-
-            var station_list = data.data.stations;//admins
-            var adress_list = data.data.addresses;//admins
-            for (var i = 0; i < station_list.length; i++) {
-                var tr = $("<tr></tr>");
-                tr.appendTo(table);
-                //添加id
-                var td_admin_id = $("<td>" + station_list[i].id + "</td>");
-                td_admin_id.appendTo(tr);
-                //nick
-                $("<td>" + station_list[i].name + "</td>").appendTo(tr);
-                //状态
-                //创建时间
-                $("<td>" + adress_list[i].lat + "</td>").appendTo(tr);
-                $("<td>" + adress_list[i].lng + "</td>").appendTo(tr);
-                $("<td>" + adress_list[i].comment + "</td>").appendTo(tr);
-                $("<td>" + station_list[i].created_at + "</td>").appendTo(tr);
-                //更新时间
-                $("<td>" + station_list[i].updated_at + "</td>").appendTo(tr);
-                //角色
-
-                //
-                //$('<td><a class="btn btn-primary btn-xs" href="./admin_edit.html?this_admin_id=' + station_list[i].id + '">编辑</a><a class="btn btn-danger btn-xs" data="1" action="delete">删除</a></td>').appendTo(tr);
-                $('<td><a class="btn btn-danger btn-xs delete">删除</a>').appendTo(tr);
-
-            }
-
-            $(".delete").each(function(event){
-                $(this).click(function(event){
-
-                    var admin_id = $(this).parent().siblings(":first").text();
-                    $.ajax({
-                        url:'http://180.76.141.171:81/station/destroy',
-                        type:'post',
-                        dataType: 'json',
-                        data: {"station_id": admin_id},
-                        success:function(data){
-                            if(data.status==0){
-                                window.location.href = "./station_list.html";
-                                alert("删除成功");
-                            }
-                        },
-                        error:function(){
-                            alert("删除失败");
-                        }
-                    });
-                });
-            });
-        },
-        error: function () {
-            alert("error");
-        }
-    });
-
-
-
-</script>
 </body>
 </html>

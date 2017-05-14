@@ -6,7 +6,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="znTlEIsix2DS0LyjKoCjMLEpZOrgDN2gNVaogKUW">
-    <title>享洗小组-管理员管理页</title>
+    <title id="title">享洗小组-管理员列表管理页</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -100,88 +100,9 @@
 
     <!-- AdminLTE for demo purposes -->
     <script src="./public/demo.js"></script><script src="./public/auth_admin.js"></script>
-    <script>
-        $.ajax({
-            url: 'http://180.76.141.171:81/show/admin',
-            type: 'get',
-            dataType: 'json',
-            success: function (data) {
-                var table = $("#example1 tbody")[0]
-
-                var admin_list = data.data;//admins
-                for (var i = 0; i < admin_list.length; i++) {
-                    var tr = $("<tr></tr>");
-                    tr.appendTo(table);
-
-                    //添加id
-                    var td_admin_id = $("<td>" + admin_list[i].id + "</td>");
-                    td_admin_id.appendTo(tr);
-                    //nick
-                    $("<td>" + admin_list[i].nick + "</td>").appendTo(tr);
-                    //状态
-                    if (admin_list[i].is_del == 0) {
-                        $("<td>可用</td>").appendTo(tr);
-                    } else {
-                        $("<td>不可用</td>").appendTo(tr);
-                    }
-                    //创建时间
-                    $("<td>" + admin_list[i].created_at + "</td>").appendTo(tr);
-                    //更新时间
-                    $("<td>" + admin_list[i].created_at + "</td>").appendTo(tr);
-                    //角色
-                    if (admin_list[i].role_id == 1) {
-                        $("<td>超管</td>").appendTo(tr);
-                    }else {
-                        $("<td>运营</td>").appendTo(tr);
-                    }
-                    //
-                    //$('<td><a class="btn btn-primary btn-xs" href="./admin_edit.html?this_admin_id=' + admin_list[i].id + '">编辑</a><a class="btn btn-danger btn-xs" data="1" action="delete">删除</a></td>').appendTo(tr);
-                    $('<td><a class="btn btn-danger btn-xs delete">删除</a>|<a class="btn btn-success btn-xs update"> 修改</a></td>').appendTo(tr);
-
-                }
-
-                $(".delete").each(function(event){
-                    $(this).click(function(event){
-
-                        var admin_id = $(this).parent().siblings(":first").text();
-
-                        $.ajax({
-                            url:'http://180.76.141.171:81/remove/admin',
-                            type:'post',
-                            dataType: 'json',
-                            data: {"admin_id": admin_id},
-                            success:function(data){
-                                if(data.status==0){
-                                    window.location.href = "./admin_list.html";
-                                    alert("删除成功");
-                                }
-                            },
-                            error:function(){
-                                alert("删除失败");
-                            }
-                        });
-                    });
-                });
-                $(".update").each(function(event){
-                    $(this).click(function(event){
-
-                        var admin_id = $(this).parent().siblings(":first").text();
-                        localStorage.update_admin_id = admin_id;
-                        window.location.href = "./admin_edit0.html";
-
-                    });
-                });
-
-            },
-            error: function () {
-                alert("error");
-            }
-        });
-
-    </script>
     <link rel="stylesheet" type="text/css" href="./public/stylesheets">
     <script type="text/javascript" src="./public/javascript"></script>
-    <!--<script type="text/javascript">jQuery.noConflict(true);</script>-->
+    <script type="text/javascript">jQuery.noConflict(true);</script>
 </head>
 <body class="skin-blue sidebar-mini" style="padding-bottom: 26px;">
 <div class="wrapper">

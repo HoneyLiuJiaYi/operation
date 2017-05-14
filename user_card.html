@@ -4,7 +4,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="znTlEIsix2DS0LyjKoCjMLEpZOrgDN2gNVaogKUW">
-    <title id="title">用户充钱-享洗小组</title>
+    <title id="title">享洗小组-用户充钱</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -138,7 +138,7 @@
                                         <label for="name" style="margin-top:7px;" >充钱</label>
                                         <input type="text" class="form-control" style="margin-top:7px;" id="money"  placeholder="请输入金额"  >
                                         <div class="form-group" style="margin-top:20px;">
-                                            <button type="button" class="btn btn-primary" onclick="putTo()" >充钱</button>
+                                            <button type="button" class="btn btn-primary"  id="putMoney" >充钱</button>
                                         </div>
 
                                     </div><!-- /.box-body -->
@@ -207,56 +207,4 @@
 <!--<script src="./public/dashboard.js"></script>-->
 AdminLTE for demo purposes
 <script src="./public/demo.js"></script>
-<script>
-    var dataJson = {};
-    dataJson.user_id = localStorage.userId;
-    $.ajax({
-        cache: false,
-        type: "POST",
-        url:"http://180.76.141.171:81/user/card",
-        data: dataJson,
-        async: true,
-        error: function(request) {
-            alert("Connection error");
-        },
-        success: function(data) {
-            if (data.status=='0') {
-                user_card = data.data.user_card;
-                $('#id').val(user_card.id);
-                $('#real_money').val(user_card.real_money);
-                $('#fake_money').val(user_card.fake_money);
-                $('#create').val(user_card.created_at);
-                $('#update').val(user_card.updated_at);
-            }else{
-                alert('获取信息失败！');
-            }
-        }
-    });
-</script>
-<script>
-    function putTo(){
-        var dataJson = {};
-        dataJson.user_id = localStorage.userId;
-        dataJson.money = $('#money').val();
-        $.ajax({
-            cache: false,
-            type: "POST",
-            url:"http://180.76.141.171:81/user/input/money",
-            data: dataJson,
-            async: true,
-            error: function(request) {
-                alert("Connection error");
-            },
-            success: function(data) {
-                if (data.status=='0') {
-                    alert("充值成功");
-                    window.location.reload();
-                }else{
-                    alert('获取信息失败！');
-                }
-            }
-        })
-    }
-
-</script>
 </body></html>
