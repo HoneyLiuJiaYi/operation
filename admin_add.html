@@ -205,51 +205,7 @@
 <!-- AdminLTE for demo purposes -->
 <script src="./public/demo.js"></script>
 <script src="./public/auth_admin.js"></script>
-<script>
-    var region = [];
-    $.ajax({
-        url: "http://180.76.141.171/station/first",
-        type: "post",
-        dataType: "json",
-        async: "false",
-        success: function (data) {
-            for (var i = 0; i < data.data.regions.length; i++) {
-                region[i] = data.data.regions[i].name;
-            }
-            $('#region').autocomplete({
-                source: region
-            })
-        }, error: function () {
-            alert("error");
-        }
-    })
-</script>
-<script>
-        $("#add_admin").click(function () {
-            var nick = $('#nick').val();
-            var password = $("#password").val();
-            var role_id = $("#role_id").val();
-            var region_name = $("#region").val();
-            alert(region_name);
-            $.ajax({
-                type:"post",
-                dataType:'json',
-                url:"http://180.76.141.171:81/add/admin",
-                data: {"nick": nick, "password": password, "role_id":role_id, "region_name":region_name},
-                success:function(data){
-                    if(data.status == 0){
-                        alert("1")
-                        window.location.href = "welcome.html";
-                    }else{
-                        alert("something wrong")
-                    }
-                }
-            });
-
-            return false;
-        });
-
-</script>
-<link rel="stylesheet" type="text/css" href="./public/stylesheets"><script type="text/javascript" src="./public/javascript"></script>
-<!--<script type="text/javascript">jQuery.noConflict(true);</script>-->
+<link rel="stylesheet" type="text/css" href="./public/stylesheets">
+<script type="text/javascript" src="./public/javascript"></script>
+<script type="text/javascript">jQuery.noConflict(true);</script>
 <div class="jvectormap-label"></div></body></html>

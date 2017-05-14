@@ -27,9 +27,10 @@ $(function () {
     }
     if (title == "首页-区域统计") {
          areaStatic();
-    }
-    if (title == "享洗小组-管理员编辑"){
-        managerEdit();
+    }if (title == "首页-区域统计") {
+        areaStatic();
+    }if (title == "享洗小组-管理员编辑") {
+        adminAdd();
     }
     sidebar();
 
@@ -137,8 +138,48 @@ function sexStatic() {
     // barChart.Bar(barChartData, barChartOptions);
 }
 
-function managerEdit() {
-    
+function adminAdd(){
+    var region = [];
+    $.ajax({
+        url: "http://180.76.141.171/station/first",
+        type: "post",
+        dataType: "json",
+        async: "false",
+        success: function (data) {
+            for (var i = 0; i < data.data.regions.length; i++) {
+                region[i] = data.data.regions[i].name;
+            }
+            $('#region').autocomplete({
+                source: region
+            })
+        }, error: function () {
+            alert("error");
+        }
+    });
+
+    $("#add_admin").click(function () {
+        var nick = $('#nick').val();
+        var password = $("#password").val();
+        var role_id = $("#role_id").val();
+        var region_name = $("#region").val();
+        alert(region_name);
+        $.ajax({
+            type:"post",
+            dataType:'json',
+            url:"http://180.76.141.171:81/add/admin",
+            data: {"nick": nick, "password": password, "role_id":role_id, "region_name":region_name},
+            success:function(data){
+                if(data.status == 0){
+                    alert("1")
+                    window.location.href = "welcome.html";
+                }else{
+                    alert("something wrong")
+                }
+            }
+        });
+
+        return false;
+    });
 }
 
 function areaStatic() {
