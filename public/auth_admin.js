@@ -75,6 +75,8 @@ $(function () {
         userCoupon();
     }if (title == "享洗小组-优惠券排除页") {
         userNotCoupon();
+    }if (title == "享洗小组-商户结算管理页") {
+        settlement();
     }
     sidebar();
     var a_id = localStorage.a_id;
@@ -275,6 +277,42 @@ function userCoupon(){
         error: function () {
             alert("error");
         }
+    });
+}
+
+function settlement() {
+    var dataJson = {};
+    if ($('.from').val() != null && $('.from').val() != "" && $('.from').val() != undefined){
+        dataJson.data_from = $('.from').val();
+    }
+    $.ajax({
+        url: 'http://180.76.233.59:81/settlement/get',
+        type: 'post',
+        data: dataJson,
+        dataType: 'json',
+        success: function (data) {
+            $('#totalPrice').val(data.data.price);
+            var table = $("tbody")[0];
+            var settlements = data.data.settlement;//admins
+            for (var i = 0; i < settlements.length; i++) {
+                var tr = $("<tr></tr>");
+                tr.appendTo(table);
+                $("<td>" + settlements[i].id + "</td>").appendTo(tr);
+                $("<td>" + settlements[i].price + "</td>").appendTo(tr);
+                $("<td>" + settlements[i].product + "</td>").appendTo(tr);
+                $("<td>" + settlements[i].category + "</td>").appendTo(tr);
+                $("<td>" + settlements[i].time + "</td>").appendTo(tr);
+                // $('<td><button class="btn  btn-xs success deleteCoupon" >删除</button></td>').appendTo(tr);
+            }
+        },
+        error: function () {
+            alert("error");
+        }
+    });
+    $('#from').datetimepicker();
+
+    $('#make').click(function(){
+       window.location.reload();
     });
 }
 
