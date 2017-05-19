@@ -1,7 +1,9 @@
 $(function () {
     if(localStorage.length == 0 || localStorage.a_id === null){
-        alert('请登录帅哥！');
-        window.location.href = "./admin_login.html";
+        if (window.location.href.indexOf("admin_login.html") == -1){
+            alert('请登录帅哥！');
+            window.location.href = "./admin_login.html";
+        }
     }
     if (localStorage.role_id == 2) {
         $('#role_auth').hide();
@@ -33,8 +35,6 @@ $(function () {
         adminAdd();
     }if (title == "享洗小组-管理员列表管理页") {
         adminList();
-    }if (title == "管理员登录-享洗小组") {
-        adminLogin();
     }if (title == "享洗小组-品类添加") {
         categoryAdd();
     }if (title == "享洗小组-品类编辑") {
@@ -75,8 +75,15 @@ $(function () {
         userCoupon();
     }if (title == "享洗小组-优惠券排除页") {
         userNotCoupon();
+<<<<<<< HEAD
     }if (title == "享洗小组-结算管理页") {
         settlement();
+=======
+    }if (title == "享洗小组-商户结算管理页") {
+        settlement();
+    }if (title == "享洗小组-管理员登录") {
+        adminLogin();
+>>>>>>> bca5bd7c1ba2e6c047f820bdcb7450dff800fa76
     }
     sidebar();
     var a_id = localStorage.a_id;
@@ -108,7 +115,7 @@ function sidebar() {
 }
 
 function sexStatic() {
-    var url = 'http://180.76.141.171:81/statistic/sex';
+    var url = 'http://180.76.233.59:81/statistic/sex';
     $.ajax({
         cache: false,
         type: "GET",
@@ -203,7 +210,7 @@ function userNotCoupon(){
     var dataJson = {};
     dataJson.user_id = localStorage.userId;
     $.ajax({
-        url: 'http://180.76.141.171:81/coupon/not',
+        url: 'http://180.76.233.59:81/coupon/not',
         type: 'post',
         data: dataJson,
         dataType: 'json',
@@ -227,7 +234,7 @@ function userNotCoupon(){
                     dataJson.coupon_id = $(this).parent().siblings(":first").text();
                     dataJson.user_id = localStorage.userId;
                     $.ajax({
-                        url: 'http://180.76.141.171:81/coupon/catch',
+                        url: 'http://180.76.233.59:81/coupon/catch',
                         type: 'post',
                         data: dataJson,
                         dataType: 'json',
@@ -256,7 +263,7 @@ function userCoupon(){
     var dataJson = {};
     dataJson.user_id = localStorage.userId;
     $.ajax({
-        url: 'http://180.76.141.171:81/coupon/user',
+        url: 'http://180.76.233.59:81/coupon/user',
         type: 'post',
         data: dataJson,
         dataType: 'json',
@@ -280,7 +287,7 @@ function userCoupon(){
                 dataJson.coupon_id = id;
                 dataJson.user_id = localStorage.userId;
                 $.ajax({
-                    url: 'http://180.76.141.171:81/coupon/user/delete',
+                    url: 'http://180.76.233.59:81/coupon/user/delete',
                     type: 'post',
                     data: dataJson,
                     dataType: 'json',
@@ -304,9 +311,45 @@ function userCoupon(){
     });
 }
 
+function settlement() {
+    var dataJson = {};
+    if ($('.from').val() != null && $('.from').val() != "" && $('.from').val() != undefined){
+        dataJson.data_from = $('.from').val();
+    }
+    $.ajax({
+        url: 'http://180.76.233.59:81/settlement/get',
+        type: 'post',
+        data: dataJson,
+        dataType: 'json',
+        success: function (data) {
+            $('#totalPrice').val(data.data.price);
+            var table = $("tbody")[0];
+            var settlements = data.data.settlement;//admins
+            for (var i = 0; i < settlements.length; i++) {
+                var tr = $("<tr></tr>");
+                tr.appendTo(table);
+                $("<td>" + settlements[i].id + "</td>").appendTo(tr);
+                $("<td>" + settlements[i].price + "</td>").appendTo(tr);
+                $("<td>" + settlements[i].product + "</td>").appendTo(tr);
+                $("<td>" + settlements[i].category + "</td>").appendTo(tr);
+                $("<td>" + settlements[i].time + "</td>").appendTo(tr);
+                // $('<td><button class="btn  btn-xs success deleteCoupon" >删除</button></td>').appendTo(tr);
+            }
+        },
+        error: function () {
+            alert("error");
+        }
+    });
+    $('#from').datetimepicker();
+
+    $('#make').click(function(){
+       window.location.reload();
+    });
+}
+
 function userList(){
     $.ajax({
-        url: 'http://180.76.141.171:81/user/list',
+        url: 'http://180.76.233.59:81/user/list',
         type: 'get',
         dataType: 'json',
         success: function (data) {
@@ -340,7 +383,7 @@ function userList(){
                     var user_id = $(this).parent().siblings(":first").text();
 
                     $.ajax({
-                        url:'http://180.76.141.171:81/user/stop',
+                        url:'http://180.76.233.59:81/user/stop',
                         type:'post',
                         dataType: 'json',
                         data: {"user_id": user_id},
@@ -375,7 +418,7 @@ function userList(){
                     var user_id = $(this).parent().siblings(":first").text();
 
                     $.ajax({
-                        url:'http://180.76.141.171:81/user/active',
+                        url:'http://180.76.233.59:81/user/active',
                         type:'post',
                         dataType: 'json',
                         data: {"user_id": user_id},
@@ -450,7 +493,7 @@ function userCard(){
     $.ajax({
         cache: false,
         type: "POST",
-        url:"http://180.76.141.171:81/user/card",
+        url:"http://180.76.233.59:81/user/card",
         data: dataJson,
         async: true,
         error: function(request) {
@@ -476,7 +519,7 @@ function userCard(){
         $.ajax({
             cache: false,
             type: "POST",
-            url:"http://180.76.141.171:81/user/input/money",
+            url:"http://180.76.233.59:81/user/input/money",
             data: dataJson,
             async: true,
             error: function(request) {
@@ -496,7 +539,7 @@ function userCard(){
 
 function stationList(){
     $.ajax({
-        url: 'http://180.76.141.171:81/station/all',
+        url: 'http://180.76.233.59:81/station/all',
         type: 'get',
         dataType: 'json',
         success: function (data) {
@@ -529,7 +572,7 @@ function stationList(){
 
                     var admin_id = $(this).parent().siblings(":first").text();
                     $.ajax({
-                        url:'http://180.76.141.171:81/station/destroy',
+                        url:'http://180.76.233.59:81/station/destroy',
                         type:'post',
                         dataType: 'json',
                         data: {"station_id": admin_id},
@@ -618,7 +661,7 @@ function stationAdd(){
         var merchant_id = 1;
         var name = $('#addressName').val();
         $.ajax({
-            url: "http://180.76.141.171:81/station/create",
+            url: "http://180.76.233.59:81/station/create",
             type: "post",
             dataType: "json",
             data: {"lat": lat, "lng": lng, "comment": comment, "region_name": region, "name": name },
@@ -648,7 +691,7 @@ function stationAdd(){
 
 function riderExamine(){
     $.ajax({
-        url:'http://180.76.141.171:81/review/rider',
+        url:'http://180.76.233.59:81/review/rider',
         type:'get',
         dataType: 'json',
         success:function(data){
@@ -671,7 +714,7 @@ function riderExamine(){
                 $(this).click(function(event){
                     var rider_id = $(this).parent().siblings(":first").text();
                     $.ajax({
-                        url:'http://180.76.141.171:81/post/rider',
+                        url:'http://180.76.233.59:81/post/rider',
                         type:'post',
                         dataType: 'json',
                         data: {"rider_id": rider_id},
@@ -696,7 +739,7 @@ function riderExamine(){
 
 function riderList(){
     $.ajax({
-        url:'http://180.76.141.171:81/manage/rider',
+        url:'http://180.76.233.59:81/manage/rider',
         type:'get',
         dataType: 'json',
         success:function(data){
@@ -742,7 +785,7 @@ function riderList(){
                     var rider_id = $(this).parent().siblings(":first").text();
 
                     $.ajax({
-                        url:'http://180.76.141.171:81/stop/rider',
+                        url:'http://180.76.233.59:81/stop/rider',
                         type:'post',
                         dataType: 'json',
                         data: {"rider_id": rider_id},
@@ -774,7 +817,7 @@ function riderList(){
                     var rider_id = $(this).parent().siblings(":first").text();
 
                     $.ajax({
-                        url:'http://180.76.141.171:81/active/rider',
+                        url:'http://180.76.233.59:81/active/rider',
                         type:'post',
                         dataType: 'json',
                         data: {"rider_id": rider_id},
@@ -815,7 +858,7 @@ function productAdd(){
         $.ajax({
             type:"post",
             dataType:'json',
-            url:"http://180.76.141.171:81/product/add",
+            url:"http://180.76.233.59:81/product/add",
             data: {"category_id":category_id, "name": name, "price": price},
             success:function(data){
 
@@ -834,7 +877,7 @@ function productAdd(){
 
 function merchantList(){
     $.ajax({
-        url: 'http://180.76.141.171:81/manage/merchant',
+        url: 'http://180.76.233.59:81/manage/merchant',
         type: 'get',
         dataType: 'json',
         success: function (data) {
@@ -883,7 +926,7 @@ function merchantList(){
                     var merchant_id = $(this).parent().siblings(":first").text();
 
                     $.ajax({
-                        url:'http://180.76.141.171:81/stop/merchant',
+                        url:'http://180.76.233.59:81/stop/merchant',
                         type:'post',
                         dataType: 'json',
                         data: {"merchant_id": merchant_id},
@@ -915,7 +958,7 @@ function merchantList(){
                     var merchant_id = $(this).parent().siblings(":first").text();
 
                     $.ajax({
-                        url:'http://180.76.141.171:81/active/merchant',
+                        url:'http://180.76.233.59:81/active/merchant',
                         type:'post',
                         dataType: 'json',
                         data: {"merchant_id": merchant_id},
@@ -943,7 +986,7 @@ function priceEdit(){
     var product_id = getURLQuery('product_id');
     $('#product_id').val(product_id);
     $.ajax({
-        url: "http://180.76.141.171:81/product/price/show",
+        url: "http://180.76.233.59:81/product/price/show",
         type: "post",
         data: "product_id=" + product_id,
         dataType: "json",
@@ -977,7 +1020,7 @@ function priceEdit(){
         jsonData.price6 = $('#price6').val();
         jsonData.product_id = $('#product_id').val();
         $.ajax({
-            url: "http://180.76.141.171:81/product/price/add",
+            url: "http://180.76.233.59:81/product/price/add",
             type: "post",
             data: jsonData,
             dataType: "json",
@@ -996,7 +1039,7 @@ function priceEdit(){
 
 function merchantExamine(){
     $.ajax({
-        url:'http://180.76.141.171:81/review/merchant',
+        url:'http://180.76.233.59:81/review/merchant',
         type:'get',
         dataType: 'json',
         success:function(data){
@@ -1034,7 +1077,7 @@ function merchantExamine(){
                     var merchant_id = $(this).parent().siblings(":first").text();
 
                     $.ajax({
-                        url:'http://180.76.141.171:81/post/merchant',
+                        url:'http://180.76.233.59:81/post/merchant',
                         type:'post',
                         dataType: 'json',
                         data: {"merchant_id": merchant_id},
@@ -1075,7 +1118,7 @@ function merchantExamine(){
 
 function logList(){
     $.ajax({
-        url: 'http://180.76.141.171:81/logs',
+        url: 'http://180.76.233.59:81/logs',
         type: 'post',
         dataType: 'json',
         success: function (data) {
@@ -1101,7 +1144,7 @@ function logList(){
 
 function couponList(){
     $.ajax({
-        url: 'http://180.76.141.171:81/coupon/show',
+        url: 'http://180.76.233.59:81/coupon/show',
         type: 'post',
         dataType: 'json',
         success: function (data) {
@@ -1126,7 +1169,7 @@ function couponList(){
 
 function categoryList(){
     $.ajax({
-        url: 'http://180.76.141.171:81/category/list',
+        url: 'http://180.76.233.59:81/category/list',
         type: 'get',
         dataType: 'json',
         success: function (data) {
@@ -1152,7 +1195,7 @@ function categoryList(){
                 $(this).click(function(event){
                     var category_id = $(this).parent().siblings(":first").text();
                     $.ajax({
-                        url:'http://180.76.141.171:81/category/stop',
+                        url:'http://180.76.233.59:81/category/stop',
                         type:'post',
                         dataType: 'json',
                         data: {"category_id": category_id},
@@ -1200,7 +1243,7 @@ function couponCreate(){
         dataJson.price = $('#price').val();
         dataJson.discount = $('#discount').val();
         $.ajax({
-            url:'http://180.76.141.171:81/coupon/create',
+            url:'http://180.76.233.59:81/coupon/create',
             type:'post',
             data: dataJson,
             dataType: 'json',
@@ -1224,7 +1267,7 @@ function categoryEdit(){
         $.ajax({
             type:"post",
             dataType:'json',
-            url:"http://180.76.141.171:81/category/edit",
+            url:"http://180.76.233.59:81/category/edit",
             data: {"category_id":category_id, "name": name},
             success:function(data){
                 if(data.status == 0){
@@ -1272,7 +1315,7 @@ function categoryAdd(){
     });
 
     $('#submitButton').click(function(){
-        var url = 'http://180.76.141.171:81/category/add';
+        var url = 'http://180.76.233.59:81/category/add';
         $.ajax({
             cache: true,
             type: "POST",
@@ -1314,45 +1357,42 @@ function GetRequest() {
     return theRequest;
 }
 
-function adminLogin(){
-    $(function () {
-        $('input').iCheck({
-            checkboxClass: 'icheckbox_square-blue',
-            radioClass: 'iradio_square-blue',
-            increaseArea: '20%' // optional
-        });
-
-        $("#login_sub").click(function () {
-            var nick = $('#nick').val();
-            var password = $("#password").val();
-            $.ajax({
-                type:"post",
-                dataType:'json',
-                url:"http://180.76.141.171:81/login",
-                data: {"nick": nick, "password": password},
-                success:function(data){
-                    if(data.msg=="success"){
-                        localStorage.a_id = data.data.admin.id;
-                        localStorage.a_nick = data.data.admin.nick;
-                        localStorage.is_del = data.data.admin.is_del;
-                        localStorage.role_id = data.data.admin.role_id;
-                        window.location.href = "./welcome.html";
-                    }else if(data.msg=="fail"){
-                        alert("账号或者密码错误")
-                    }
-                },
-                error: function(){
-                    alert("fuck");
+function adminLogin() {
+    $('input').iCheck({
+        checkboxClass: 'icheckbox_square-blue',
+        radioClass: 'iradio_square-blue',
+        increaseArea: '20%' // optional
+    });
+    $("#login_sub").click(function () {
+        var nick = $('#nick').val();
+        var password = $("#password").val();
+        $.ajax({
+            type: "post",
+            dataType: 'json',
+            url: "http://180.76.233.59:81/login",
+            data: {"nick": nick, "password": password},
+            success: function (data) {
+                if (data.msg == "success") {
+                    localStorage.a_id = data.data.admin.id;
+                    localStorage.a_nick = data.data.admin.nick;
+                    localStorage.is_del = data.data.admin.is_del;
+                    localStorage.role_id = data.data.admin.role_id;
+                    window.location.href = "./welcome.html";
+                } else if (data.msg == "fail") {
+                    alert("账号或者密码错误")
                 }
-            });
-            return false;
+            },
+            error: function () {
+                alert("fuck");
+            }
         });
+        return false;
     });
 }
 
 function adminList(){
     $.ajax({
-        url: 'http://180.76.141.171:81/show/admin',
+        url: 'http://180.76.233.59:81/show/admin',
         type: 'get',
         dataType: 'json',
         success: function (data) {
@@ -1396,7 +1436,7 @@ function adminList(){
                     var admin_id = $(this).parent().siblings(":first").text();
 
                     $.ajax({
-                        url:'http://180.76.141.171:81/remove/admin',
+                        url:'http://180.76.233.59:81/remove/admin',
                         type:'post',
                         dataType: 'json',
                         data: {"admin_id": admin_id},
@@ -1457,7 +1497,7 @@ function adminAdd(){
         $.ajax({
             type:"post",
             dataType:'json',
-            url:"http://180.76.141.171:81/add/admin",
+            url:"http://180.76.233.59:81/add/admin",
             data: {"nick": nick, "password": password, "role_id":role_id, "region_name":region_name},
             success:function(data){
                 if(data.status == 0){
@@ -1474,7 +1514,7 @@ function adminAdd(){
 
 
 function areaStatic() {
-    var url = 'http://180.76.141.171:81/statistic/sex';
+    var url = 'http://180.76.233.59:81/statistic/sex';
     $.ajax({
         cache: false,
         type: "GET",
@@ -1564,7 +1604,7 @@ function areaStatic() {
 }
 function productList() {
     $.ajax({
-        url: 'http://180.76.141.171:81/product/list',
+        url: 'http://180.76.233.59:81/product/list',
         type: 'post',
         dataType: 'json',
         data: {"category_id": localStorage.update_category_id},
@@ -1602,7 +1642,7 @@ function productList() {
                     var product_id = $(this).parent().siblings(":first").text();
 
                     $.ajax({
-                        url:'http://180.76.141.171:81/product/stop',
+                        url:'http://180.76.233.59:81/product/stop',
                         type:'post',
                         dataType: 'json',
                         data: {"product_id": product_id},
@@ -1673,7 +1713,7 @@ $('a[action="delete"]').on('click', function () {
 
 function riderStationList() {
     $.ajax({
-        url: 'http://180.76.141.171:81/rider/station',
+        url: 'http://180.76.233.59:81/rider/station',
         type: 'post',
         dataType: 'json',
         data: {"rider_id": localStorage.update_rider_id},
@@ -1693,7 +1733,7 @@ function riderStationList() {
                 $(this).click(function(event){
                     var station_id = $(this).parent().siblings(":first").text();
                     $.ajax({
-                        url:'http://180.76.141.171:81/rider/unbindRider',
+                        url:'http://180.76.233.59:81/rider/unbindRider',
                         type:'post',
                         dataType: 'json',
                         data: {"rider_id": localStorage.update_rider_id, "station_id": station_id},
@@ -1726,7 +1766,7 @@ function riderStationList() {
 }
 function riderStationAdd() {
     $.ajax({
-        url: 'http://180.76.141.171:81/rider/unstation',
+        url: 'http://180.76.233.59:81/rider/unstation',
         type: 'post',
         dataType: 'json',
         data: {"rider_id": localStorage.update_rider_id},
@@ -1747,7 +1787,7 @@ function riderStationAdd() {
 
                     var station_id = $(this).parent().siblings(":first").text();
                     $.ajax({
-                        url:'http://180.76.141.171:81/rider/bind',
+                        url:'http://180.76.233.59:81/rider/bind',
                         type:'post',
                         dataType: 'json',
                         data: {"rider_id": localStorage.update_rider_id, "station_id": station_id},
@@ -1773,7 +1813,7 @@ function riderStationAdd() {
 }
 function merchantStationAdd() {
     $.ajax({
-        url: 'http://180.76.141.171:81/merchant/unstation',
+        url: 'http://180.76.233.59:81/merchant/unstation',
         type: 'post',
         dataType: 'json',
         data: {"merchant_id": localStorage.update_merchant_id},
@@ -1793,7 +1833,7 @@ function merchantStationAdd() {
                 $(this).click(function(event){
                     var station_id = $(this).parent().siblings(":first").text();
                     $.ajax({
-                        url:'http://180.76.141.171:81/merchant/bind',
+                        url:'http://180.76.233.59:81/merchant/bind',
                         type:'post',
                         dataType: 'json',
                         data: {"merchant_id": localStorage.update_merchant_id, "station_id": station_id},
@@ -1818,7 +1858,7 @@ function merchantStationAdd() {
 }
 function merchantStationList() {
     $.ajax({
-        url: 'http://180.76.141.171:81/merchant/station',
+        url: 'http://180.76.233.59:81/merchant/station',
         type: 'post',
         dataType: 'json',
         data: {"merchant_id": localStorage.update_merchant_id},
@@ -1838,7 +1878,7 @@ function merchantStationList() {
                 $(this).click(function(event){
                     var station_id = $(this).parent().siblings(":first").text();
                     $.ajax({
-                        url:'http://180.76.141.171:81/merchant/unbind',
+                        url:'http://180.76.233.59:81/merchant/unbind',
                         type:'post',
                         dataType: 'json',
                         data: {"merchant_id": localStorage.update_merchant_id, "station_id": station_id},

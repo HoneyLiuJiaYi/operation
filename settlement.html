@@ -6,6 +6,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="znTlEIsix2DS0LyjKoCjMLEpZOrgDN2gNVaogKUW">
+<<<<<<< HEAD
     <title id="title">享洗小组-结算管理页</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -264,6 +265,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="znTlEIsix2DS0LyjKoCjMLEpZOrgDN2gNVaogKUW">
     <title id="title">享洗小组-流水管理页</title>
+=======
+    <title id="title">享洗小组-商户结算管理页</title>
+>>>>>>> bca5bd7c1ba2e6c047f820bdcb7450dff800fa76
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -289,6 +293,10 @@
     <link rel="stylesheet" href="./public/daterangepicker-bs3.css">
     <!-- bootstrap wysihtml5 - text editor -->
     <link rel="stylesheet" href="./public/bootstrap3-wysihtml5.min.css">
+<<<<<<< HEAD
+=======
+    <link href="./public/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+>>>>>>> bca5bd7c1ba2e6c047f820bdcb7450dff800fa76
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -362,6 +370,10 @@
     <link rel="stylesheet" type="text/css" href="./public/stylesheets">
     <script type="text/javascript" src="./public/javascript"></script>
     <script type="text/javascript">jQuery.noConflict(true);</script>
+<<<<<<< HEAD
+=======
+    <script src="./public/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"></script>
+>>>>>>> bca5bd7c1ba2e6c047f820bdcb7450dff800fa76
 </head>
 <body class="skin-blue sidebar-mini" style="padding-bottom: 26px;">
 <div class="wrapper">
@@ -442,6 +454,7 @@
                         <div class="box-header">
                             <h3 class="box-title">流水列表</h3>
                         </div><!-- /.box-header -->
+<<<<<<< HEAD
                         <div class="box-body">
                             <form action="http://www.xiangxi.com/admin/user" method="get">
                                 <div class="row">
@@ -463,6 +476,24 @@
                                         <button class="btn btn-info btn-flat">确定</button>
                                     </span>
                                     </div>
+=======
+
+                        <div class="box-body">
+                                <div class="row">
+                                    <div class="col-xs-2">
+                                        <div class="input-append date" id="from"
+                                             data-date-format="yyyy-mm-dd HH:mm:ss">
+                                            <input class="from form-control" size="16" type="text" ng-model="$scope.time" placeholder="开始时间">
+                                            <span class="add-on"><i class="icon-th"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 ">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-info btn-flat" id="make">确定</button>
+                                    </span>
+                                    </div>
+
+>>>>>>> bca5bd7c1ba2e6c047f820bdcb7450dff800fa76
                                     <div class="col-md-3 col-md-offset-5">
                                         <div class="input-group input-group">
                                             <form id="searchForm" method="get">
@@ -473,15 +504,27 @@
                                         </div><!-- /input-group -->
                                     </div>
                                 </div>
+<<<<<<< HEAD
                             </form>
+=======
+                            <label>总价</label>
+                            <input class="from form-control" type="text" disabled="disabled" id="totalPrice" value="" style="width:300px;text-align:center;color:red;"/>
+>>>>>>> bca5bd7c1ba2e6c047f820bdcb7450dff800fa76
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
                                     <th>ID</th>
+<<<<<<< HEAD
                                     <th>单价</th>
                                     <th>商品</th>
                                     <th>品类</th>
                                     <th>创建时间</th>
+=======
+                                    <th>价格</th>
+                                    <th>产品</th>
+                                    <th>品类</th>
+                                    <th width="30%">创建时间</th>
+>>>>>>> bca5bd7c1ba2e6c047f820bdcb7450dff800fa76
                                 </tr>
                                 </thead>
                                 <tbody id="tbody_context">
