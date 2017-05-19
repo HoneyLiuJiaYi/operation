@@ -75,6 +75,8 @@ $(function () {
         userCoupon();
     }if (title == "享洗小组-优惠券排除页") {
         userNotCoupon();
+    }if (title == "享洗小组-结算管理页") {
+        settlement();
     }
     sidebar();
     var a_id = localStorage.a_id;
@@ -171,6 +173,30 @@ function sexStatic() {
         legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
     };
     pieChart.Doughnut(PieData, pieOptions);
+}
+
+function settlement(){
+    $.ajax({
+        url: 'http://180.76.141.171:81/settlement/get',
+        type: 'post',
+        dataType: 'json',
+        success: function (data) {
+            var table = $("tbody")[0];
+            var settlement = data.data.settlement;//admins
+            for (var i = 0; i < coupons.length; i++) {
+                var tr = $("<tr></tr>");
+                tr.appendTo(table);
+                $("<td>" + settlement[i].id + "</td>").appendTo(tr);
+                $("<td>" + settlement[i].price + "</td>").appendTo(tr);
+                $("<td>" + settlement[i].product + "</td>").appendTo(tr);
+                $("<td>" + settlement[i].category + "</td>").appendTo(tr);
+                $("<td>" + settlement[i].created_at + "</td>").appendTo(tr);
+            }
+        },
+        error: function () {
+            alert("error");
+        }
+    });
 }
 
 function userNotCoupon(){
