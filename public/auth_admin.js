@@ -75,15 +75,10 @@ $(function () {
         userCoupon();
     }if (title == "享洗小组-优惠券排除页") {
         userNotCoupon();
-<<<<<<< HEAD
-    }if (title == "享洗小组-结算管理页") {
-        settlement();
-=======
     }if (title == "享洗小组-商户结算管理页") {
         settlement();
     }if (title == "享洗小组-管理员登录") {
         adminLogin();
->>>>>>> bca5bd7c1ba2e6c047f820bdcb7450dff800fa76
     }
     sidebar();
     var a_id = localStorage.a_id;
@@ -110,7 +105,9 @@ function sidebar() {
         '<li class=" treeview"><a href=""><i class="fa fa-group"></i> <span>商品管理</span> <i class="fa fa-angle-left pull-right"></i></a><ul class="treeview-menu"><li class="active"><a href="./category_list0.html"><i class="fafa-shopping-cart"></i> 品类列表 </a></li></ul></li><li class=" treeview"><a href=""><i class="fa fa-group"></i><span>站点管理</span> <i class="fa fa-angle-left pull-right"></i></a><ul class="treeview-menu"><li class="active"><a href="./station_add.html"><i class="fafa-shopping-cart"></i> 创建站点 </a></li><li class="active"><a href="./station_list.html"><i class="fafa-shopping-cart"></i> 站点列表 </a></li></ul></li><li class=" treeview"><a href=""><i class="fa fa-group"></i> <span>统计</span> <i class="fa fa-angle-left pull-right"></i></a>' +
         '<ul class="treeview-menu"><li class="active"><a href="./sex_static.html"><i class="fa fa-users"></i> 性别统计</a></li></ul>' +
         '<ul class="treeview-menu"><li class="active"><a href="./log_list.html"><i class="fa fa-users"></i> 流水统计</a></li></ul>' +
-        '<ul class="treeview-menu"><li class="active"><a href="./area_static.html"><i class="fa fa-users"></i> 区域统计</a></li></ul></li></ul></section>';
+        '<ul class="treeview-menu"><li class="active"><a href="./area_static.html"><i class="fa fa-users"></i> 区域统计</a></li></ul>' +
+        '<ul class="treeview-menu"><li class="active"><a href="./settlement.html"><i class="fa fa-users"></i> 结算统计</a></li></ul>' +
+        '</li></ul></section>';
     $(".main-sidebar").html(sidebar);
 }
 
@@ -312,14 +309,9 @@ function userCoupon(){
 }
 
 function settlement() {
-    var dataJson = {};
-    if ($('.from').val() != null && $('.from').val() != "" && $('.from').val() != undefined){
-        dataJson.data_from = $('.from').val();
-    }
     $.ajax({
         url: 'http://180.76.233.59:81/settlement/get',
         type: 'post',
-        data: dataJson,
         dataType: 'json',
         success: function (data) {
             $('#totalPrice').val(data.data.price);
@@ -333,7 +325,6 @@ function settlement() {
                 $("<td>" + settlements[i].product + "</td>").appendTo(tr);
                 $("<td>" + settlements[i].category + "</td>").appendTo(tr);
                 $("<td>" + settlements[i].time + "</td>").appendTo(tr);
-                // $('<td><button class="btn  btn-xs success deleteCoupon" >删除</button></td>').appendTo(tr);
             }
         },
         error: function () {
@@ -343,7 +334,35 @@ function settlement() {
     $('#from').datetimepicker();
 
     $('#make').click(function(){
-       window.location.reload();
+        $('tbody').text('');
+        var dataJson = {};
+        if ($('.from').val() != null && $('.from').val() != "" && $('.from').val() != undefined){
+            dataJson.data_from = $('.from').val();
+        }
+        $.ajax({
+            url: 'http://180.76.233.59:81/settlement/get',
+            type: 'post',
+            data: dataJson,
+            dataType: 'json',
+            success: function (data) {
+                $('#totalPrice').val(data.data.price);
+                var table = $("tbody")[0];
+                var settlements = data.data.settlement;//admins
+                for (var i = 0; i < settlements.length; i++) {
+                    var tr = $("<tr></tr>");
+                    tr.appendTo(table);
+                    $("<td>" + settlements[i].id + "</td>").appendTo(tr);
+                    $("<td>" + settlements[i].price + "</td>").appendTo(tr);
+                    $("<td>" + settlements[i].product + "</td>").appendTo(tr);
+                    $("<td>" + settlements[i].category + "</td>").appendTo(tr);
+                    $("<td>" + settlements[i].time + "</td>").appendTo(tr);
+                    // $('<td><button class="btn  btn-xs success deleteCoupon" >删除</button></td>').appendTo(tr);
+                }
+            },
+            error: function () {
+                alert("error");
+            }
+        });
     });
 }
 
