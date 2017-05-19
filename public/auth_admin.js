@@ -1,7 +1,9 @@
 $(function () {
     if(localStorage.length == 0 || localStorage.a_id === null){
-        alert('请登录帅哥！');
-        window.location.href = "./admin_login.html";
+        if (window.location.href.indexOf("admin_login.html") == -1){
+            alert('请登录帅哥！');
+            window.location.href = "./admin_login.html";
+        }
     }
     if (localStorage.role_id == 2) {
         $('#role_auth').hide();
@@ -33,8 +35,6 @@ $(function () {
         adminAdd();
     }if (title == "享洗小组-管理员列表管理页") {
         adminList();
-    }if (title == "管理员登录-享洗小组") {
-        adminLogin();
     }if (title == "享洗小组-品类添加") {
         categoryAdd();
     }if (title == "享洗小组-品类编辑") {
@@ -77,6 +77,8 @@ $(function () {
         userNotCoupon();
     }if (title == "享洗小组-商户结算管理页") {
         settlement();
+    }if (title == "享洗小组-管理员登录") {
+        adminLogin();
     }
     sidebar();
     var a_id = localStorage.a_id;
@@ -1326,39 +1328,36 @@ function GetRequest() {
     return theRequest;
 }
 
-function adminLogin(){
-    $(function () {
-        $('input').iCheck({
-            checkboxClass: 'icheckbox_square-blue',
-            radioClass: 'iradio_square-blue',
-            increaseArea: '20%' // optional
-        });
-
-        $("#login_sub").click(function () {
-            var nick = $('#nick').val();
-            var password = $("#password").val();
-            $.ajax({
-                type:"post",
-                dataType:'json',
-                url:"http://180.76.233.59:81/login",
-                data: {"nick": nick, "password": password},
-                success:function(data){
-                    if(data.msg=="success"){
-                        localStorage.a_id = data.data.admin.id;
-                        localStorage.a_nick = data.data.admin.nick;
-                        localStorage.is_del = data.data.admin.is_del;
-                        localStorage.role_id = data.data.admin.role_id;
-                        window.location.href = "./welcome.html";
-                    }else if(data.msg=="fail"){
-                        alert("账号或者密码错误")
-                    }
-                },
-                error: function(){
-                    alert("fuck");
+function adminLogin() {
+    $('input').iCheck({
+        checkboxClass: 'icheckbox_square-blue',
+        radioClass: 'iradio_square-blue',
+        increaseArea: '20%' // optional
+    });
+    $("#login_sub").click(function () {
+        var nick = $('#nick').val();
+        var password = $("#password").val();
+        $.ajax({
+            type: "post",
+            dataType: 'json',
+            url: "http://180.76.233.59:81/login",
+            data: {"nick": nick, "password": password},
+            success: function (data) {
+                if (data.msg == "success") {
+                    localStorage.a_id = data.data.admin.id;
+                    localStorage.a_nick = data.data.admin.nick;
+                    localStorage.is_del = data.data.admin.is_del;
+                    localStorage.role_id = data.data.admin.role_id;
+                    window.location.href = "./welcome.html";
+                } else if (data.msg == "fail") {
+                    alert("账号或者密码错误")
                 }
-            });
-            return false;
+            },
+            error: function () {
+                alert("fuck");
+            }
         });
+        return false;
     });
 }
 
