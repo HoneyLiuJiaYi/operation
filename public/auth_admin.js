@@ -180,12 +180,14 @@ function sexStatic() {
 }
 
 function settlement(){
+    alert(1);
     $.ajax({
         url: 'http://180.76.141.171:81/settlement/get',
         type: 'post',
         dataType: 'json',
         success: function (data) {
             var table = $("tbody")[0];
+            $('#totalPrice').val(data.data.price);
             var settlement = data.data.settlement;//admins
             for (var i = 0; i < coupons.length; i++) {
                 var tr = $("<tr></tr>");
@@ -196,11 +198,51 @@ function settlement(){
                 $("<td>" + settlement[i].category + "</td>").appendTo(tr);
                 $("<td>" + settlement[i].created_at + "</td>").appendTo(tr);
             }
+            $('#download').click(function(){
+                alert(1);
+            });
         },
         error: function () {
             alert("error");
         }
     });
+
+    $('#from').datetimepicker();
+
+    $('#make').click(function(){
+        alert(1);
+        $('tbody').text('');
+        var dataJson = {};
+        if ($('.from').val() != null && $('.from').val() != "" && $('.from').val() != undefined){
+            dataJson.data_from = $('.from').val();
+        }
+        alert(dataJson.data_from);
+        $.ajax({
+            url: 'http://180.76.233.59:81/settlement/get',
+            type: 'post',
+            data: dataJson,
+            dataType: 'json',
+            success: function (data) {
+                $('#totalPrice').val(data.data.price);
+                var table = $("tbody")[0];
+                var settlements = data.data.settlement;//admins
+                for (var i = 0; i < settlements.length; i++) {
+                    var tr = $("<tr></tr>");
+                    tr.appendTo(table);
+                    $("<td>" + settlements[i].price + "</td>").appendTo(tr);
+                    $("<td>" + settlements[i].product + "</td>").appendTo(tr);
+                    $("<td>" + settlements[i].category + "</td>").appendTo(tr);
+                    $("<td>" + settlements[i].product_num + "</td>").appendTo(tr);
+                    $("<td>" + settlements[i].time + "</td>").appendTo(tr);
+                }
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    });
+
+
 }
 
 function userNotCoupon(){
@@ -364,6 +406,10 @@ function settlement() {
             }
         });
     });
+
+    $('#download').click(function(){
+        window.location.href="http://180.76.233.59:81/download";
+    })
 }
 
 function userList(){
