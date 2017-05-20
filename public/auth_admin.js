@@ -203,7 +203,7 @@ function settlement(){
             });
         },
         error: function () {
-            alert("error");
+            alert("结算信息获取失败");
         }
     });
 
@@ -237,7 +237,7 @@ function settlement(){
                 }
             },
             error: function () {
-                alert("error");
+                alert("结算信息获取失败");
             }
         });
     });
@@ -286,14 +286,14 @@ function userNotCoupon(){
                             }
                         },
                         error: function () {
-                            alert("error");
+                            alert("参数传递有误");
                         }
                     });
                 });
             });
         },
         error: function () {
-            alert("error");
+            alert("参数传递有误");
         }
     });
 }
@@ -760,7 +760,7 @@ function riderExamine(){
         type:'get',
         dataType: 'json',
         success:function(data){
-            var table=$("#example1 tbody")[0];
+            var table=$("tbody")[0];
             var riders=data.riders;
             for(var i=0;i<riders.length;i++)
             {
@@ -1537,7 +1537,7 @@ function adminList(){
 function adminAdd(){
     var region = [];
     $.ajax({
-        url: "http://180.76.141.171/station/first",
+        url: "http://180.76.233.59/station/first",
         type: "post",
         dataType: "json",
         async: "false",
@@ -1549,7 +1549,7 @@ function adminAdd(){
                 source: region
             })
         }, error: function () {
-            alert("error");
+            alert("无法获取地区信息");
         }
     });
 
