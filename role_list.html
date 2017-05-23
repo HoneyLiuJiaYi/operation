@@ -6,7 +6,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="znTlEIsix2DS0LyjKoCjMLEpZOrgDN2gNVaogKUW">
-    <title id="title">享洗小组-商户结算管理页</title>
+    <title id="title">享洗小组-角色管理页</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -32,7 +32,6 @@
     <link rel="stylesheet" href="./public/daterangepicker-bs3.css">
     <!-- bootstrap wysihtml5 - text editor -->
     <link rel="stylesheet" href="./public/bootstrap3-wysihtml5.min.css">
-    <link href="./public/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -102,11 +101,9 @@
     <!-- AdminLTE for demo purposes -->
     <script src="./public/demo.js"></script>
     <script src="./public/auth_admin.js"></script>
-
     <link rel="stylesheet" type="text/css" href="./public/stylesheets">
     <script type="text/javascript" src="./public/javascript"></script>
     <script type="text/javascript">jQuery.noConflict(true);</script>
-    <script src="./public/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"></script>
 </head>
 <body class="skin-blue sidebar-mini" style="padding-bottom: 26px;">
 <div class="wrapper">
@@ -131,7 +128,6 @@
                     <li class="dropdown user user-menu">
                         <a href="" class="dropdown-toggle" data-toggle="dropdown">
                             <img src="./public/1467940567994502.jpg" class="user-image" alt="User Image">
-
                             <span class="a_nick hidden-xs">xiangxi_bjtu</span>
                         </a>
                         <ul class="dropdown-menu">
@@ -161,20 +157,39 @@
 
         <!-- /.sidebar -->
     </aside>
-
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper" style="min-height: 901px;">
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                结算查看
+                角色管理
+                <small>在这里进行角色权限的管理</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="http://www.xiangxi.com/admin/manager#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li><a href="http://www.xiangxi.com/admin/manager#">结算列表</a></li>
+                <li><a href="http://www.xiangxi.com/admin/manager#">角色列表</a></li>
             </ol>
         </section>
+        <input type="hidden" id="role_id"/>
+        <!-- 模态框（Modal） -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="nav " id="navt">
 
+                        </ul>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
         <!-- Main content -->
         <section class="content">
             <div class="row">
@@ -185,47 +200,20 @@
 
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">流水列表</h3>
+                            <h3 class="box-title">角色列表</h3>
                         </div><!-- /.box-header -->
 
                         <div class="box-body">
-                                <div class="row">
-                                    <div class="col-xs-2">
-                                        <div class="input-append date" id="from"
-                                             data-date-format="yyyy-mm-dd HH:mm:ss">
-                                            <input class="from form-control" size="16" type="text" ng-model="$scope.time" placeholder="开始时间">
-                                            <span class="add-on"><i class="icon-th"></i></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 ">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-info btn-flat" id="make">确定</button>
-                                        <button class="btn btn-info btn-flat" style="margin-left:30px;" id="download">下载</button>
-                                    </span>
-                                    </div>
-
-                                    <div class="col-md-3 col-md-offset-5">
-                                          <button  class="btn" style="width:100px;" id="withdraw">结算</button>
-                                    </div>
-                                </div>
-                            <label>总价</label>
-                            <input class="form-control" type="text" disabled="disabled" id="totalPrice" value="" style="width:300px;text-align:center;color:red;"/>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>产品</th>
-                                    <th>品类</th>
-                                    <th>数量</th>
-                                    <th>订单金额</th>
-                                    <th>骑手获利</th>
-                                    <th>商家获利</th>
-                                    <th>运营获利</th>
-                                    <th>创建时间</th>
-                                    <th>结算情况</th>
+                                    <th>角色ID</th>
+                                    <th>名称</th>
+                                    <th>角色定位</th>
+                                    <th width="20%">操作</th>
                                 </tr>
                                 </thead>
-                                <tbody id="tbody_context">
+                                <tbody id="container">
 
                                 </tbody>
                             </table>
@@ -234,6 +222,7 @@
                     </div><!-- /.box -->
                 </div><!-- /.col -->
             </div><!-- /.row -->
+
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
 

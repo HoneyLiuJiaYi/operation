@@ -77,14 +77,14 @@ $(function () {
         userNotCoupon();
     }if (title == "享洗小组-商户结算管理页") {
         settlement();
-    }if (title == "享洗小组-管理员登录") {
-        adminLogin();
+    }if (title == "享洗小组-角色管理页") {
+        roleList();
     }
-    sidebar();
     var a_id = localStorage.a_id;
     var a_nick = localStorage.a_nick;
     var is_del = localStorage.is_del;
     var role_id = localStorage.role_id;
+    sidebar(role_id);
     if (role_id == '1') {
         role_id = '超级管理员';
     }else {
@@ -98,17 +98,35 @@ function logout() {
     window.location.href = "./admin_login.html";
 }
 
-function sidebar() {
-    var sidebar = '<section class="sidebar" style="height: auto;"><div class="user-panel"><div class="pull-left image"><img src="./public/1467940567994502.jpg" class="img-circle" alt="User Image"></div><div class="pull-left info"><p class="a_nick">xiangxi_bjtu</p><a href=""><i class="fa fa-circle text-success"></i> Online</a></div></div><!-- search form --><form action="" method="get" class="sidebar-form"><div class="input-group"><input type="text" name="q" class="form-control" placeholder="Search..."><span class="input-group-btn"><button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button></span></div></form><!-- /.search form --><!-- sidebar menu: : style can be found in sidebar.less --><ul class="sidebar-menu"><li class="header">主功能区</li><li class=" treeview"><a id="role_auth" href="./admin_list.html"><i class="fa fa-user-secret"></i> <span>管理员管理</span> <i class="fa fa-angle-left pull-right"></i></a><ul class="treeview-menu"><li class="active"><a href="./admin_list.html"><i class="fa fa-users"></i> 管理员列表</a></li><li><a href="./admin_add.html"><i class="fa fa-user-plus"></i> 添加管理员</a></li></ul></li><li class=" treeview"><a href=""><i class="fa fa-user"></i> <span>用户管理</span> <i class="fa fa-angle-left pull-right"></i></a><ul class="treeview-menu"><li class="active"><a href="./user_list0.html"><i class="fa fa-users"></i> 用户列表</a></li></ul></li><li class=" treeview"><a href=""><i class="fa fa-group"></i> <span>骑手管理</span> <i class="fa fa-angle-left pull-right"></i></a><ul class="treeview-menu"><li class="active"><a href="./rider_list.html"><i class="fa fa-users"></i> 骑手列表</a></li><li class="active"><a href="./rider_examine.html"><i class="fa fa-users"></i> 骑手审核</a></li></ul></li>' +
-        '<li class=" treeview"><a href=""><i class="fa fa-group"></i> <span>工厂管理</span> <i class="fa fa-angle-left pull-right"></i></a><ul class="treeview-menu"><li class="active"><a href="./merchant_list.html"><i class="fa fa-users"></i> 工厂列表</a></li><li class="active"><a href="./merchant_examine.html"><i class="fa fa-users"></i> 工厂审核</a></li></ul></li>' +
-        '<li class=" treeview"><a href=""><i class="fa fa-group"></i> <span>优惠券</span> <i class="fa fa-angle-left pull-right"></i></a><ul class="treeview-menu"><li class="active"><a href="./coupon_create.html"><i class="fa fa-users"></i> 优惠券建立</a></li><li class="active"><a href="./coupon_show.html"><i class="fa fa-users"></i> 优惠券查看</a></li></ul></li>' +
-        '<li class=" treeview"><a href=""><i class="fa fa-group"></i> <span>商品管理</span> <i class="fa fa-angle-left pull-right"></i></a><ul class="treeview-menu"><li class="active"><a href="./category_list0.html"><i class="fafa-shopping-cart"></i> 品类列表 </a></li></ul></li><li class=" treeview"><a href=""><i class="fa fa-group"></i><span>站点管理</span> <i class="fa fa-angle-left pull-right"></i></a><ul class="treeview-menu"><li class="active"><a href="./station_add.html"><i class="fafa-shopping-cart"></i> 创建站点 </a></li><li class="active"><a href="./station_list.html"><i class="fafa-shopping-cart"></i> 站点列表 </a></li></ul></li><li class=" treeview"><a href=""><i class="fa fa-group"></i> <span>统计</span> <i class="fa fa-angle-left pull-right"></i></a>' +
-        '<ul class="treeview-menu"><li class="active"><a href="./sex_static.html"><i class="fa fa-users"></i> 性别统计</a></li></ul>' +
-        '<ul class="treeview-menu"><li class="active"><a href="./log_list.html"><i class="fa fa-users"></i> 流水统计</a></li></ul>' +
-        '<ul class="treeview-menu"><li class="active"><a href="./area_static.html"><i class="fa fa-users"></i> 区域统计</a></li></ul>' +
-        '<ul class="treeview-menu"><li class="active"><a href="./settlement.html"><i class="fa fa-users"></i> 结算统计</a></li></ul>' +
-        '</li></ul></section>';
-    $(".main-sidebar").html(sidebar);
+function sidebar(rid) {
+    var header = '<section class="sidebar" style="height: auto;"><div class="user-panel"><div class="pull-left image"><img src="./public/1467940567994502.jpg" class="img-circle" alt="User Image"></div><div class="pull-left info"><p class="a_nick">xiangxi_bjtu</p><a href=""><i class="fa fa-circle text-success"></i> Online</a></div></div><!-- search form --><form action="" method="get" class="sidebar-form"><div class="input-group"><input type="text" name="q" class="form-control" placeholder="Search..."><span class="input-group-btn"><button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button></span></div></form><!-- /.search form --><!-- sidebar menu: : style can be found in sidebar.less --><ul class="sidebar-menu"><li class="header">主功能区</li>';
+    var footer = '</ul></section>';
+    $.ajax({
+        url: "http://180.76.233.59:81/role/service",
+        type: "post",
+        data: "role_id=" + rid,
+        dataType: "json",
+        success: function (data) {
+            var services = data.data.service;
+            var ak = [];
+            for (var i = 0 ; i < services.length ; i++){
+                var child = services[i].child;
+                var subheader = '<li class=" treeview"><a id="role_auth" href="./admin_list.html"><i class="fa fa-user-secret"></i> <span>' + services[i].root + '</span> <i class="fa fa-angle-left pull-right"></i></a><ul class="treeview-menu">';
+                var arr = [];
+                arr.push(subheader);
+                for (var j = 0 ; j < child.length ; j++){
+                    var subcontainer = '<li><a href="' + child[j].url + '"><i class="fa fa-users"></i> ' + child[j].root + '</a></li>';
+                    arr.push(subcontainer);
+                }
+                var subfooter = '</ul></li>';
+                arr.push(subfooter);
+                ak.push(arr);
+            }
+            $(".main-sidebar").html(header + ak + footer);
+        }, error: function () {
+            alert("无法获取权限");
+        }
+    });
 }
 
 function sexStatic() {
@@ -179,69 +197,131 @@ function sexStatic() {
     pieChart.Doughnut(PieData, pieOptions);
 }
 
-function settlement(){
-    alert(1);
+function roleList(){
     $.ajax({
-        url: 'http://180.76.141.171:81/settlement/get',
+        url: 'http://180.76.233.59:81/role/list',
         type: 'post',
         dataType: 'json',
         success: function (data) {
-            var table = $("tbody")[0];
-            $('#totalPrice').val(data.data.price);
-            var settlement = data.data.settlement;//admins
-            for (var i = 0; i < coupons.length; i++) {
+            var table = $("#container");
+            var roles = data.data.role;//admins
+            for (var i = 0; i < roles.length; i++) {
                 var tr = $("<tr></tr>");
                 tr.appendTo(table);
-                $("<td>" + settlement[i].id + "</td>").appendTo(tr);
-                $("<td>" + settlement[i].price + "</td>").appendTo(tr);
-                $("<td>" + settlement[i].product + "</td>").appendTo(tr);
-                $("<td>" + settlement[i].category + "</td>").appendTo(tr);
-                $("<td>" + settlement[i].created_at + "</td>").appendTo(tr);
+                $("<td>" + roles[i].id + "</td>").appendTo(tr);
+                $("<td>" + roles[i].nick + "</td>").appendTo(tr);
+                $("<td>" + roles[i].comment + "</td>").appendTo(tr);
+                $('<td><button class="btn btn-danger btn-xs have" data-toggle="modal" data-target="#myModal">已有权限</button>|<button class="btn btn-danger btn-xs not" data-toggle="modal" data-target="#myModal">未添加权限</button></td>').appendTo(tr);
             }
-            $('#download').click(function(){
-                alert(1);
+            $('.have').each(function (event) {
+                $(this).click(function (event) {
+                    var dataJson = {};
+                    dataJson.role_id = $(this).parent().siblings(":first").text();
+                    $('#role_id').val(dataJson.role_id);
+                    $.ajax({
+                        url: 'http://180.76.233.59:81/role/service',
+                        type: 'post',
+                        data: dataJson,
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#myModalLabel').text("角色已有权限");
+                            var services = data.data.service;
+                            $('#navt').text('');
+                            for (var i = 0 ; i < services.length ; i++){
+                                var child = services[i].child;
+                                var li = $('<li data-toggle="collapse" data-target="#summary_' + services[i].id + '">' + services[i].root + '</li>');
+                                li.appendTo($('#navt'));
+                                var div = $('<div id="summary_' + services[i].id + '"></div>');
+                                div.appendTo($('#navt'));
+                                var table = $('<table class="table table-striped"><thead><tr><th>权限</th><th>地址</th><th>所属</th><th>操作</th></tr></thead><tbody id="tbody_' + services[i].id + '"></tbody></table>');
+                                table.appendTo(div);
+                                var tbody = $('#tbody_' + services[i].id + '');
+                                for (var j = 0 ; j < child.length ; j++){
+                                    var tr = $("<tr></tr>");
+                                    tr.appendTo(tbody);
+                                    $("<td>" + child[j].id + "</td>").appendTo(tr);
+                                    $("<td>" + child[j].root + "</td>").appendTo(tr);
+                                    $("<td>" + child[j].url + "</td>").appendTo(tr);
+                                    $("<td>" + services[i].root + "</td>").appendTo(tr);
+                                    $('<td><button class="btn btn-danger btn-xs">无</button></td>').appendTo(tr);
+                                }
+                            }
+                        }, error: function () {
+                            alert("网络不好");
+                        }
+                    });
+                });
+            });
+
+            $('.not').each(function(event){
+                $(this).click(function(event){
+                    var dataJson = {};
+                    dataJson.role_id = $(this).parent().siblings(":first").text();
+                    $('#role_id').val(dataJson.role_id);
+                    $.ajax({
+                        url: 'http://180.76.233.59:81/role/not',
+                        type: 'post',
+                        data: dataJson,
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#myModalLabel').text("角色未有权限");
+                            var services = data.data.service;
+                            $('#navt').text('');
+                            for (var i = 0 ; i < services.length ; i++){
+                                var child = services[i].child;
+                                var li = $('<li data-toggle="collapse" data-target="#summary_' + services[i].id + '">' + services[i].root + '</li>');
+                                li.appendTo($('#navt'));
+                                var div = $('<div id="summary_' + services[i].id + '"></div>');
+                                div.appendTo($('#navt'));
+                                var table = $('<table class="table table-striped"><thead><tr><th>ID</th><th>权限</th><th>地址</th><th>所属</th><th>操作</th></tr></thead><tbody id="tbody_' + services[i].id + '"></tbody></table>');
+                                table.appendTo(div);
+                                var tbody = $('#tbody_' + services[i].id + '');
+                                for (var j = 0 ; j < child.length ; j++){
+                                    var tr = $("<tr></tr>");
+                                    tr.appendTo(tbody);
+                                    $("<td>" + child[j].id + "</td>").appendTo(tr);
+                                    $("<td>" + child[j].root + "</td>").appendTo(tr);
+                                    $("<td>" + child[j].url + "</td>").appendTo(tr);
+                                    $("<td>" + services[i].root + "</td>").appendTo(tr);
+                                    $('<td><button class="btn btn-danger btn-xs addService">添加</button></td>').appendTo(tr);
+                                }
+                            }
+
+                            $('.addService').each(function (event) {
+                               $(this).click(function(event){
+                                   var sid = $(this).parent().siblings(":first").text();
+                                   var kk = $(this);
+                                   $.ajax({
+                                       url: 'http://180.76.233.59:81/role/add',
+                                       type: 'post',
+                                       data: 'service_id=' + sid + '&role_id=' + $('#role_id').val(),
+                                       dataType: 'json',
+                                       success: function(data) {
+                                            if (data.status == 0){
+                                                alert("成功更新");
+                                                kk.attr("disabled", "disabled");
+                                            } else {
+                                                alert("参数错误");
+                                            }
+                                       },
+                                       error: function () {
+                                           alert("error");
+                                       }
+                                   });
+                               });
+                            });
+
+                        }, error: function () {
+                            alert("网络不好");
+                        }
+                    });
+                });
             });
         },
         error: function () {
-            alert("结算信息获取失败");
+            alert("error");
         }
     });
-
-    $('#from').datetimepicker();
-
-    $('#make').click(function(){
-        alert(1);
-        $('tbody').text('');
-        var dataJson = {};
-        if ($('.from').val() != null && $('.from').val() != "" && $('.from').val() != undefined){
-            dataJson.data_from = $('.from').val();
-        }
-        alert(dataJson.data_from);
-        $.ajax({
-            url: 'http://180.76.233.59:81/settlement/get',
-            type: 'post',
-            data: dataJson,
-            dataType: 'json',
-            success: function (data) {
-                $('#totalPrice').val(data.data.price);
-                var table = $("tbody")[0];
-                var settlements = data.data.settlement;//admins
-                for (var i = 0; i < settlements.length; i++) {
-                    var tr = $("<tr></tr>");
-                    tr.appendTo(table);
-                    $("<td>" + settlements[i].price + "</td>").appendTo(tr);
-                    $("<td>" + settlements[i].product + "</td>").appendTo(tr);
-                    $("<td>" + settlements[i].category + "</td>").appendTo(tr);
-                    $("<td>" + settlements[i].product_num + "</td>").appendTo(tr);
-                    $("<td>" + settlements[i].time + "</td>").appendTo(tr);
-                }
-            },
-            error: function () {
-                alert("结算信息获取失败");
-            }
-        });
-    });
-
 
 }
 
@@ -351,6 +431,7 @@ function userCoupon(){
 }
 
 function settlement() {
+
     $.ajax({
         url: 'http://180.76.233.59:81/settlement/get',
         type: 'post',
@@ -363,10 +444,19 @@ function settlement() {
                 var tr = $("<tr></tr>");
                 tr.appendTo(table);
                 $("<td>" + settlements[i].id + "</td>").appendTo(tr);
-                $("<td>" + settlements[i].price + "</td>").appendTo(tr);
                 $("<td>" + settlements[i].product + "</td>").appendTo(tr);
                 $("<td>" + settlements[i].category + "</td>").appendTo(tr);
+                $("<td>" + settlements[i].num + "</td>").appendTo(tr);
+                $("<td>" + settlements[i].order_price + "</td>").appendTo(tr);
+                $("<td>" + settlements[i].rider_price + "</td>").appendTo(tr);
+                $("<td>" + settlements[i].merchant_price + "</td>").appendTo(tr);
+                $("<td>" + settlements[i].operation_price + "</td>").appendTo(tr);
                 $("<td>" + settlements[i].time + "</td>").appendTo(tr);
+                if(settlements[i].withdraw == 0){
+                    $('<td><button class="btn btn-danger btn-xs stop">已结算</button></td>').appendTo(tr);
+                }else{
+                    $('<td><button class="btn btn-danger btn-xs active">未结算</button></td>').appendTo(tr);
+                }
             }
         },
         error: function () {
@@ -394,11 +484,19 @@ function settlement() {
                     var tr = $("<tr></tr>");
                     tr.appendTo(table);
                     $("<td>" + settlements[i].id + "</td>").appendTo(tr);
-                    $("<td>" + settlements[i].price + "</td>").appendTo(tr);
                     $("<td>" + settlements[i].product + "</td>").appendTo(tr);
                     $("<td>" + settlements[i].category + "</td>").appendTo(tr);
+                    $("<td>" + settlements[i].num + "</td>").appendTo(tr);
+                    $("<td>" + settlements[i].order_price + "</td>").appendTo(tr);
+                    $("<td>" + settlements[i].rider_price + "</td>").appendTo(tr);
+                    $("<td>" + settlements[i].merchant_price + "</td>").appendTo(tr);
+                    $("<td>" + settlements[i].operation_price + "</td>").appendTo(tr);
                     $("<td>" + settlements[i].time + "</td>").appendTo(tr);
-                    // $('<td><button class="btn  btn-xs success deleteCoupon" >删除</button></td>').appendTo(tr);
+                    if(settlements[i].withdraw == 0){
+                        $('<td><button class="btn btn-danger btn-xs stop">已结算</button></td>').appendTo(tr);
+                    }else{
+                        $('<td><button class="btn btn-danger btn-xs active">未结算</button></td>').appendTo(tr);
+                    }
                 }
             },
             error: function () {
@@ -410,6 +508,24 @@ function settlement() {
     $('#download').click(function(){
         window.location.href="http://180.76.233.59:81/download";
     })
+
+    $('#withdraw').click(function(){
+        $.ajax({
+            url:'http://180.76.233.59:81/withdraw',
+            type:'post',
+            dataType: 'json',
+            success:function(data){
+                if(data.status==0){
+                    alert("成功结算" +　data.data.price + "元");
+                    window.location.reload();
+                }
+            },
+            error:function(){
+                alert("error");
+            }
+        });
+    })
+
 }
 
 function userList(){
@@ -1422,39 +1538,6 @@ function GetRequest() {
     return theRequest;
 }
 
-function adminLogin() {
-    $('input').iCheck({
-        checkboxClass: 'icheckbox_square-blue',
-        radioClass: 'iradio_square-blue',
-        increaseArea: '20%' // optional
-    });
-    $("#login_sub").click(function () {
-        var nick = $('#nick').val();
-        var password = $("#password").val();
-        $.ajax({
-            type: "post",
-            dataType: 'json',
-            url: "http://180.76.233.59:81/login",
-            data: {"nick": nick, "password": password},
-            success: function (data) {
-                if (data.msg == "success") {
-                    localStorage.a_id = data.data.admin.id;
-                    localStorage.a_nick = data.data.admin.nick;
-                    localStorage.is_del = data.data.admin.is_del;
-                    localStorage.role_id = data.data.admin.role_id;
-                    window.location.href = "./welcome.html";
-                } else if (data.msg == "fail") {
-                    alert("账号或者密码错误")
-                }
-            },
-            error: function () {
-                alert("fuck");
-            }
-        });
-        return false;
-    });
-}
-
 function adminList(){
     $.ajax({
         url: 'http://180.76.233.59:81/show/admin',
@@ -1558,7 +1641,6 @@ function adminAdd(){
         var password = $("#password").val();
         var role_id = $("#role_id").val();
         var region_name = $("#region").val();
-        alert(region_name);
         $.ajax({
             type:"post",
             dataType:'json',
@@ -1566,7 +1648,6 @@ function adminAdd(){
             data: {"nick": nick, "password": password, "role_id":role_id, "region_name":region_name},
             success:function(data){
                 if(data.status == 0){
-                    alert("1")
                     window.location.href = "welcome.html";
                 }else{
                     alert("something wrong")
