@@ -79,6 +79,8 @@ $(function () {
         settlement();
     }if (title == "享洗小组-角色管理页") {
         roleList();
+    }if (title == "享洗小组-管理员修改") {
+        adminEdit();
     }
     var a_id = localStorage.a_id;
     var a_nick = localStorage.a_nick;
@@ -123,8 +125,6 @@ function sidebar(rid) {
                 ak.push(arr);
             }
             $(".main-sidebar").html(header + ak + footer);
-        }, error: function () {
-            alert("无法获取权限");
         }
     });
 }
@@ -197,6 +197,58 @@ function sexStatic() {
     pieChart.Doughnut(PieData, pieOptions);
 }
 
+function adminEdit(){
+
+
+    $.ajax({
+        url:"http://180.76.233.59:81/admin/single",
+        type: "post",
+        data: "admin_id=" + localStorage.update_admin_id,
+        dataType: "json",
+        error: function(request) {
+            alert("Connection error");
+        },
+        success: function(data) {
+            if (data.status == 0) {
+                $('#nick').val(data.data.nick);
+            }else{
+                alert('获取信息失败！');
+            }
+        }
+    });
+
+    $('#edit_admin').click(function(){
+        var newpassword = $('#newpassword').val();
+        var newpassword2 = $('#newpassword2').val();
+        if (newpassword != newpassword2){
+            alert("新密码不相同");
+            return;
+        }
+        var dataJson = {};
+        dataJson.admin_id = localStorage.update_admin_id;
+        dataJson.nick = $('#nick').val();
+        dataJson.password = newpassword;
+        dataJson.role_id = $('#role_id').val();
+        $.ajax({
+            url:"http://180.76.233.59:81/admin/single",
+            type: "post",
+            data: dataJson,
+            dataType: "json",
+            error: function(request) {
+                alert("参数 error");
+            },
+            success: function(data) {
+                if (data.status == 0) {
+                    alert("修改成功!");
+                    window.location.href = "./admin_list.html";
+                }else{
+                    alert('获取信息失败！');
+                }
+            }
+        });
+    });
+}
+
 function roleList(){
     $.ajax({
         url: 'http://180.76.233.59:81/role/list',
@@ -243,9 +295,34 @@ function roleList(){
                                     $("<td>" + child[j].root + "</td>").appendTo(tr);
                                     $("<td>" + child[j].url + "</td>").appendTo(tr);
                                     $("<td>" + services[i].root + "</td>").appendTo(tr);
-                                    $('<td><button class="btn btn-danger btn-xs">无</button></td>').appendTo(tr);
+                                    $('<td><button class="btn btn-danger btn-xs deleteService">删除</button></td>').appendTo(tr);
                                 }
                             }
+
+                            $('.deleteService').each(function (event) {
+                                $(this).click(function(event){
+                                    var sid = $(this).parent().siblings(":first").text();
+                                    var kk = $(this);
+                                    $.ajax({
+                                        url: 'http://180.76.233.59:81/role/service/delete',
+                                        type: 'post',
+                                        data: 'service_id=' + sid + '&role_id=' + $('#role_id').val(),
+                                        dataType: 'json',
+                                        success: function(data) {
+                                            if (data.status == 0){
+                                                alert("成功删除");
+                                                kk.attr("disabled", "disabled");
+                                            } else {
+                                                alert("参数错误");
+                                            }
+                                        },
+                                        error: function () {
+                                            alert("error");
+                                        }
+                                    });
+                                });
+                            });
+
                         }, error: function () {
                             alert("网络不好");
                         }
@@ -721,11 +798,11 @@ function userCard(){
 function stationList(){
     $.ajax({
         url: 'http://180.76.233.59:81/station/all',
-        type: 'get',
+        type: 'post',
+        data: 'region_id=' + localStorage.admin_region_id,
         dataType: 'json',
         success: function (data) {
             var table = $("tbody")[0];
-
             var station_list = data.data.stations;//admins
             var adress_list = data.data.addresses;//admins
             for (var i = 0; i < station_list.length; i++) {
@@ -962,9 +1039,7 @@ function riderList(){
 
             $(".stop").each(function(event){
                 $(this).click(function(event){
-
                     var rider_id = $(this).parent().siblings(":first").text();
-
                     $.ajax({
                         url:'http://180.76.233.59:81/stop/rider',
                         type:'post',
@@ -974,7 +1049,6 @@ function riderList(){
                             if(data.status==0){
                                 alert("禁用成功");
                                 window.location.href = "./rider_list.html";
-
                             }
                         },
                         error:function(){
@@ -994,9 +1068,7 @@ function riderList(){
             });
             $(".active").each(function(event){
                 $(this).click(function(event){
-
                     var rider_id = $(this).parent().siblings(":first").text();
-
                     $.ajax({
                         url:'http://180.76.233.59:81/active/rider',
                         type:'post',
@@ -1568,9 +1640,11 @@ function adminList(){
                 $("<td>" + admin_list[i].created_at + "</td>").appendTo(tr);
                 //角色
                 if (admin_list[i].role_id == 1) {
-                    $("<td>超管</td>").appendTo(tr);
-                }else {
+                    $("<td>超级管理员</td>").appendTo(tr);
+                }else if (admin_list[i].role_id == 2) {
                     $("<td>运营</td>").appendTo(tr);
+                } else {
+                    $("<td>区域管理员</td>").appendTo(tr);
                 }
                 //
                 //$('<td><a class="btn btn-primary btn-xs" href="./admin_edit.html?this_admin_id=' + admin_list[i].id + '">编辑</a><a class="btn btn-danger btn-xs" data="1" action="delete">删除</a></td>').appendTo(tr);
@@ -1605,7 +1679,7 @@ function adminList(){
 
                     var admin_id = $(this).parent().siblings(":first").text();
                     localStorage.update_admin_id = admin_id;
-                    window.location.href = "./admin_edit0.html";
+                    window.location.href = "./admin_edit.html";
 
                 });
             });

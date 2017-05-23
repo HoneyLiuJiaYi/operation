@@ -91,6 +91,7 @@
                     localStorage.a_nick = data.data.admin.nick;
                     localStorage.is_del = data.data.admin.is_del;
                     localStorage.role_id = data.data.admin.role_id;
+                    localStorage.admin_region_id = data.data.admin.region_id;
                     window.location.href = "./welcome.html";
                 } else if (data.msg == "fail") {
                     alert("账号或者密码错误")
