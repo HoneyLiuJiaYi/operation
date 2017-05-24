@@ -117,8 +117,13 @@
                             <h3 class="box-title">品类</h3>
                         </div><!-- /.box-header -->
                         <!-- form start -->
-                        <form id="registerForm" action="" method="post" enctype="multipart/form-data">
+                        <form id="categoryEditForm" action="" method="post" enctype="multipart/form-data" style="height:60%f">
                             <div class="box-body">
+                                <div class="form-group">
+                                    <label for="name">品类ID</label>
+                                    <input type="hidden" class="form-control" id="category_id" name="category_id" >
+                                    <input type="text" class="form-control" id="old" disabled="disabled" >
+                                </div>
                                 <div class="form-group">
                                     <label for="name">品类名</label>
                                     <input type="text" class="form-control" id="name" name="name" placeholder="请输入品类名">
@@ -128,11 +133,10 @@
                                     <input id="logo" name="logo" type="file" accept="image/*" class="file-loading">
                                     <div id="errorBlock" class="help-block"></div>
                                 </div>
-                               
                             </div><!-- /.box-body -->
 
                             <div class="box-footer">
-                                <button type="submit" id="edit_category" class="btn btn-primary edit_category">保存</button>
+                                <button type="submit" id="edit_category" class="btn btn-primary  edit_category">保存</button>
                                 <button type="reset" class="btn btn-danger">重置</button>
 
                             </div>
@@ -153,7 +157,7 @@
         <div class="pull-right hidden-xs">
             <b>Version</b> 2.3.0
         </div>
-        <strong>Copyright © 2014-2015 <a href="http://almsaeedstudio.com/">Almsaeed Studio</a>.</strong> All rights
+        <strong>Copyright © 2017-2017 <a href="http://almsaeedstudio.com/">Almsaeed Studio</a>.</strong> All rights
         reserved.
     </footer>
 

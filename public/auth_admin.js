@@ -55,8 +55,6 @@ $(function () {
         priceEdit();
     }if (title == "享洗小组-产品添加") {
         productAdd();
-    }if (title == "享洗小组-商品列表页") {
-        productList();
     }if (title == "享洗小组-骑手审核") {
         riderExamine();
     }if (title == "享洗小组-骑士列表页") {
@@ -81,6 +79,8 @@ $(function () {
         roleList();
     }if (title == "享洗小组-管理员修改") {
         adminEdit();
+    }if (title == "享洗小组-商品编辑") {
+        productEdit();
     }
     var a_id = localStorage.a_id;
     var a_nick = localStorage.a_nick;
@@ -195,6 +195,35 @@ function sexStatic() {
         legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
     };
     pieChart.Doughnut(PieData, pieOptions);
+}
+
+function productEdit(){
+    $('#product_id').val(localStorage.update_product_id);
+    $('#old').val(localStorage.update_product_id);
+    $("#edit_product").click(function () {
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url:'http://180.76.233.59:81/product/edit',
+            cache: false,
+            data: new FormData($('#productForm')[0]),
+            processData: false,
+            contentType: false,
+            async: false,
+            error: function(request) {
+                alert("Connection error");
+            },
+            success: function(data) {
+                if (data.status=='0') {
+                    alert("修改成功！");
+                    window.location.href = "./product_list0.html";
+                }else{
+                    alert('修改失败，重新来过！');
+                }
+            }
+        });
+        return false;
+    });
 }
 
 function adminEdit(){
@@ -1103,27 +1132,32 @@ function riderList(){
 }
 
 function productAdd(){
-    $("#add_product").click(function () {
-        var category_id = localStorage.update_category_id;
-        alert(category_id);
-        var name = $("#name").val();
-        var price = $("#price").val();
+    $('#category_id').val(localStorage.update_category_id);
+    $('#old').val(localStorage.update_category_id);
+    $('#add_product').click(function(){
+        var url = 'http://180.76.233.59:81/product/add';
         $.ajax({
-            type:"post",
-            dataType:'json',
-            url:"http://180.76.233.59:81/product/add",
-            data: {"category_id":category_id, "name": name, "price": price},
-            success:function(data){
-
-                if(data.status == 0){
-                    alert("修改成功！")
+            cache: true,
+            type: "POST",
+            url:url,
+            cache: false,
+            data: new FormData($('#addForm')[0]),
+            processData: false,
+            contentType: false,
+            async: false,
+            error: function(request) {
+                alert(request);
+                alert("Connection error");
+            },
+            success: function(data) {
+                if (data.status=='0') {
+                    alert("添加成功！");
                     window.location.href = "./product_list0.html";
                 }else{
-                    alert("something wrong")
+                    alert('添加失败，重新来过！');
                 }
             }
         });
-
         return false;
     });
 }
@@ -1373,6 +1407,7 @@ function logList(){
     $.ajax({
         url: 'http://180.76.233.59:81/logs',
         type: 'post',
+        data: 'page=' + 1,
         dataType: 'json',
         success: function (data) {
             var table = $("tbody")[0];
@@ -1388,6 +1423,41 @@ function logList(){
                 $("<td>" + logs[i].created_at + "</td>").appendTo(tr);
                 $("<td>" + logs[i].updated_at + "</td>").appendTo(tr);
             }
+            var element = $('#bp-3-element-test');
+            //初始化所需数据
+            var options = {
+                bootstrapMajorVersion:3,
+                currentPage: data.data.page,
+                numberOfPages: 6,
+                totalPages:data.data.count,
+                onPageClicked: function (e, originalEvent, type, page) {
+                    $.ajax({
+                        url: 'http://180.76.233.59:81/logs',
+                        type: 'post',
+                        data: 'page=' + page,
+                        dataType: 'json',
+                        success: function(data){
+                            var table = $("tbody");
+                            $("tbody").text('');
+                            var logs = data.data.logs;
+                            for (var i = 0; i < logs.length; i++) {
+                                var tr = $("<tr></tr>");
+                                tr.appendTo(table);
+                                $("<td>" + logs[i].id + "</td>").appendTo(tr);
+                                $("<td>" + logs[i].user_card_id + "</td>").appendTo(tr);
+                                $("<td>" + logs[i].real_money + "</td>").appendTo(tr);
+                                $("<td>" + logs[i].fake_money + "</td>").appendTo(tr);
+                                $("<td>" + logs[i].method + "</td>").appendTo(tr);
+                                $("<td>" + logs[i].created_at + "</td>").appendTo(tr);
+                                $("<td>" + logs[i].updated_at + "</td>").appendTo(tr);
+                            }
+                            options.currentPage = data.data.page;
+                            options.totalPages = data.data.count;
+                        }
+                    })
+                }
+            };
+            element.bootstrapPaginator(options);
         },
         error: function () {
             alert("error");
@@ -1513,21 +1583,27 @@ function couponCreate(){
 }
 
 function categoryEdit(){
+    $('#category_id').val(localStorage.update_category_id);
+    $('#old').val(localStorage.update_category_id);
     $("#edit_category").click(function () {
-        var category_id = localStorage.update_category_id;
-        alert(category_id);
-        var name = $("#name").val();
         $.ajax({
-            type:"post",
-            dataType:'json',
-            url:"http://180.76.233.59:81/category/edit",
-            data: {"category_id":category_id, "name": name},
-            success:function(data){
-                if(data.status == 0){
-                    alert("修改成功！")
+            cache: true,
+            type: "POST",
+            url:'http://180.76.233.59:81/category/edit',
+            cache: false,
+            data: new FormData($('#categoryEditForm')[0]),
+            processData: false,
+            contentType: false,
+            async: false,
+            error: function(request) {
+                alert("Connection error");
+            },
+            success: function(data) {
+                if (data.status=='0') {
+                    alert("修改成功！");
                     window.location.href = "./category_list0.html";
                 }else{
-                    alert("something wrong")
+                    alert('修改失败，重新来过！');
                 }
             }
         });
@@ -1536,45 +1612,14 @@ function categoryEdit(){
 }
 
 function categoryAdd(){
-    var region = [];
-    $.ajax({
-        url: "http://180.76.141.171/station/first",
-        type: "post",
-        dataType: "json",
-        async: "false",
-        success: function (data) {
-            for (var i = 0; i < data.data.regions.length; i++) {
-                region[i] = data.data.regions[i].name;
-            }
-            $('#region1').autocomplete({
-                source: region
-            })
-            $('#region2').autocomplete({
-                source: region
-            })
-            $('#region3').autocomplete({
-                source: region
-            })
-            $('#region4').autocomplete({
-                source: region
-            })
-            $('#region5').autocomplete({
-                source: region
-            })
-            $('#region6').autocomplete({
-                source: region
-            })
-        }
-    });
-
-    $('#submitButton').click(function(){
+    $('#add_category').click(function(){
         var url = 'http://180.76.233.59:81/category/add';
         $.ajax({
             cache: true,
             type: "POST",
             url:url,
             cache: false,
-            data: new FormData($('#registerForm')[0]),
+            data: new FormData($('#categoryForm')[0]),
             processData: false,
             contentType: false,
             async: false,
@@ -1582,7 +1627,6 @@ function categoryAdd(){
                 alert("Connection error");
             },
             success: function(data) {
-                alert(data.msg);
                 if (data.status=='0') {
                     alert("添加成功！");
                     window.location.href = "./category_list0.html";
@@ -1593,7 +1637,6 @@ function categoryAdd(){
         });
         return false;
     });
-
 }
 
 //获取url中的参数
@@ -1850,8 +1893,6 @@ function productList() {
                 } else {
                     $("<td>不可用</td>").appendTo(tr);
                 }
-                //
-                //$('<td><a class="btn btn-primary btn-xs" href="./admin_edit.html?this_category_id=' + product_list[i].id + '">编辑</a><a class="btn btn-danger btn-xs" data="1" action="delete">删除</a></td>').appendTo(tr);
                 $('<td><a class="btn btn-danger btn-xs delete">删除</a>|<a class="btn btn-success btn-xs update"> 修改</a>|<a class="btn btn-adn btn-xs price">价格</a></td>').appendTo(tr);
 
             }
@@ -1882,7 +1923,7 @@ function productList() {
                 $(this).click(function(event){
                     var product_id = $(this).parent().siblings(":first").text();
                     localStorage.update_product_id = product_id;
-                    window.location.href = "./product_edit0.html";
+                    window.location.href = "./product_edit.html";
 
                 });
             });
