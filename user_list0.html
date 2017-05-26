@@ -40,7 +40,6 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-
     <style type="text/css">.jqstooltip {
         position: absolute;
         left: 0px;
@@ -124,12 +123,12 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                工厂管理
-                <small>在这里进行工厂的管理</small>
+                用户管理
+                <small>在这里进行用户的管理</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="http://www.xiangxi.com/admin/merchant#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li><a href="http://www.xiangxi.com/admin/merchant#">工厂列表</a></li>
+                <li><a href="http://www.xiangxi.com/admin/merchant#">用户列表</a></li>
             </ol>
         </section>
 
@@ -140,10 +139,13 @@
                     <div id="alert" class="callout hide">
                         <p name="content"></p>
                     </div>
-
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">工厂列表</h3>
+                            <h3 class="box-title">用户列表</h3>
+                            <div style="float:right;margin-right:98px;" width="300px;">
+                                <input type="text" style="margin-right:-3px;height:35px;" id="search">
+                                <button type="button" class="btn btn-success cha">查询</button>
+                            </div>
                         </div><!-- /.box-header -->
                         <div class="box-body">
                             <table id="example1" class="table table-bordered table-striped">
@@ -166,6 +168,9 @@
                     </div><!-- /.box -->
                 </div><!-- /.col -->
             </div><!-- /.row -->
+            <div style="margin-left:300px;">
+                <ul id='bp-3-element-test'  style="cursor:hand;"></ul>
+            </div>
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
 
@@ -217,6 +222,7 @@
 <link rel="stylesheet" type="text/css" href="public/stylesheets">
 <script type="text/javascript" src="public/javascript"></script>
 <script type="text/javascript">jQuery.noConflict(true);</script>
+<script src="./public/bootstrap-paginator.js"></script>
 <div class="jvectormap-label"></div>
 </body>
 </html>

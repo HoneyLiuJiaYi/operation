@@ -237,8 +237,9 @@ function addAdvertisement(){
                 alert("Connection error");
             },
             success: function(data) {
-                if (data.status=='0') {
+                if (data.status == '0') {
                     alert("添加成功！");
+                    window.location.href="./advertisement_list.html";
                 }else{
                     alert(data.msg);
                 }
@@ -412,7 +413,7 @@ function adminEdit(){
         dataJson.password = newpassword;
         dataJson.role_id = $('#role_id').val();
         $.ajax({
-            url:"http://180.76.233.59:81/admin/single",
+            url:"http://180.76.233.59:81/edit/admin",
             type: "post",
             data: dataJson,
             dataType: "json",
@@ -791,6 +792,7 @@ function userList(){
     $.ajax({
         url: 'http://180.76.233.59:81/user/list',
         type: 'get',
+        data: "search=" + "" + "&page=" + 1,
         dataType: 'json',
         success: function (data) {
             var table = $("#example1 tbody")[0]
@@ -818,6 +820,97 @@ function userList(){
                 }
                 $('<td><button class="btn  btn-xs success coupon" >查券</button></td>').appendTo(tr);
             }
+            $('#search').val(data.data.search);
+            var element = $('#bp-3-element-test');
+            //初始化所需数据
+            var options = {
+                bootstrapMajorVersion:3,
+                currentPage: data.data.page,
+                numberOfPages: 3,
+                totalPages: data.data.count,
+                onPageClicked: function (e, originalEvent, type, page) {
+                    $.ajax({
+                        url: 'http://180.76.233.59:81/user/list',
+                        type: 'get',
+                        data: "search=" + $('#search').val() + "&page=" + page,
+                        dataType: 'json',
+                        success: function (data) {
+                            table = $("tbody");
+                            $("tbody").text('');
+                            user_list = data.data.users;//admins
+                            for (var i = 0; i < user_list.length; i++) {
+                                var tr = $("<tr></tr>");
+                                tr.appendTo(table);
+                                //添加id
+                                var td_merchant_id = $("<td>" + user_list[i].id + "</td>");
+                                td_merchant_id.appendTo(tr);
+                                //nick
+                                $("<td>" + user_list[i].name + "</td>").appendTo(tr);
+                                $("<td>" + user_list[i].sex + "</td>").appendTo(tr);
+
+                                $("<td>" + user_list[i].mobile + "</td>").appendTo(tr);
+                                if (user_list[i].is_del == 0) {
+                                    $("<td>正常</td>").appendTo(tr);
+                                } else {
+                                    $("<td>异常</td>").appendTo(tr);
+                                }
+                                if (user_list[i].is_del == 0) {
+                                    $('<td><button class="btn btn-danger btn-xs stop">禁用</button>' + '<button class="btn  btn-xs success chong" style="margin-left:10px;" >充钱</button></td>').appendTo(tr);
+                                } else {
+                                    $('<td><button class="btn btn-danger btn-xs active">恢复</button>' + '<button class="btn  btn-xs success chong" style="margin-left:10px;" >充钱</button></td>').appendTo(tr);
+                                }
+                                $('<td><button class="btn  btn-xs success coupon" >查券</button></td>').appendTo(tr);
+                            }
+                            $('#search').val(data.data.search);
+
+                            options.currentPage = data.data.page;
+                            options.totalPages = data.data.count;
+                        }
+                    });
+                }
+            };
+            element.bootstrapPaginator(options);
+
+            $('.cha').click(function(){
+                $.ajax({
+                    url: 'http://180.76.233.59:81/user/list',
+                    type: 'post',
+                    data: "search=" + $('#search').val() + "&page=" + 1,
+                    dataType: 'json',
+                    success: function (data) {
+                        var table = $("tbody");
+                        $("tbody").text('');
+                        var user_list = data.data.users;//admins
+                        for (var i = 0; i < user_list.length; i++) {
+                            var tr = $("<tr></tr>");
+                            tr.appendTo(table);
+                            //添加id
+                            var td_merchant_id = $("<td>" + user_list[i].id + "</td>");
+                            td_merchant_id.appendTo(tr);
+                            //nick
+                            $("<td>" + user_list[i].name + "</td>").appendTo(tr);
+                            $("<td>" + user_list[i].sex + "</td>").appendTo(tr);
+
+                            $("<td>" + user_list[i].mobile + "</td>").appendTo(tr);
+                            if (user_list[i].is_del == 0) {
+                                $("<td>正常</td>").appendTo(tr);
+                            } else {
+                                $("<td>异常</td>").appendTo(tr);
+                            }
+                            if (user_list[i].is_del == 0) {
+                                $('<td><button class="btn btn-danger btn-xs stop">禁用</button>' + '<button class="btn  btn-xs success chong" style="margin-left:10px;" >充钱</button></td>').appendTo(tr);
+                            } else {
+                                $('<td><button class="btn btn-danger btn-xs active">恢复</button>' + '<button class="btn  btn-xs success chong" style="margin-left:10px;" >充钱</button></td>').appendTo(tr);
+                            }
+                            $('<td><button class="btn  btn-xs success coupon" >查券</button></td>').appendTo(tr);
+                        }
+                        $('#search').val(data.data.search);
+                        options.currentPage = data.data.page;
+                        options.totalPages = data.data.count;
+                    }
+                });
+            });
+
             $(".stop").each(function(event){
                 $(this).click(function(event){
                     var user_id = $(this).parent().siblings(":first").text();
@@ -846,6 +939,9 @@ function userList(){
                     window.location.href="./user_card.html"
                 });
             });
+
+
+
             $(".coupon").each(function(event){
                 $(this).click(function(event){
                     localStorage.userId = $(this).parent().siblings(":first").text();
@@ -1114,7 +1210,7 @@ function stationAdd(){
     })
     var region = [];
     $.ajax({
-        url: "http://180.76.141.171/station/first",
+        url: "http://180.76.233.59/station/first",
         type: "post",
         dataType: "json",
         async: "false",
@@ -1344,9 +1440,9 @@ function merchantList(){
                 $("<td><img src='"+ merchant_list[i].logo + "'  width='30' height='30' /></td>").appendTo(tr);
 
                 if(merchant_list[i].status==0){
-                    $("<td>正常</td>").appendTo(tr);
+                    $("<td>已审核</td>").appendTo(tr);
                 }else{
-                    $("<td>异常</td>").appendTo(tr);
+                    $("<td>未审核</td>").appendTo(tr);
                 }
 
                 $("<td>" + merchant_list[i].comment + "</td>").appendTo(tr);
@@ -1635,7 +1731,47 @@ function couponList(){
                 $("<td>" + coupons[i].to + "</td>").appendTo(tr);
                 $("<td>" + coupons[i].price + "</td>").appendTo(tr);
                 $("<td>" + coupons[i].discount + "</td>").appendTo(tr);
+                $('<td><a class="btn btn-danger btn-xs delete">删除</a>|<a class="btn btn-danger btn-xs push">全体发放</a></td>').appendTo(tr);
             }
+            $('.delete').each(function(event){
+               $(this).click(function(event){
+                   var id = $(this).parent().siblings(":first").text();
+                   $.ajax({
+                       url: 'http://180.76.233.59:81/coupon/del',
+                       type: 'post',
+                       data: "id=" + id,
+                       dataType: 'json',
+                       success: function (data) {
+                            if (data.status == 0){
+                                alert("删除成功");
+                                window.location.reload();
+                            } else{
+                                alert("删除失败，请重来");
+                            }
+                       }
+                   })
+               });
+            });
+
+            $('.push').each(function(event){
+                $(this).click(function(event){
+                    var id = $(this).parent().siblings(":first").text();
+                    $.ajax({
+                        url: 'http://180.76.233.59:81/coupon/push/all',
+                        type: 'post',
+                        data: "id=" + id,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.status == 0){
+                                alert("发放成功");
+                                window.location.reload();
+                            } else{
+                                alert("发放失败，请重来");
+                            }
+                        }
+                    })
+                });
+            });
         },
         error: function () {
             alert("error");
@@ -1726,6 +1862,7 @@ function couponCreate(){
             success:function(data){
                 if(data.status==0){
                     alert("建立成功");
+                    window.location.href="./coupon_show.html";
                 }
             },
             error:function(){
