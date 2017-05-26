@@ -85,6 +85,8 @@ $(function () {
         addAdvertisement();
     }if (title == "享洗小组-广告列表管理页") {
         advertisementList();
+    }if (title == "享洗小组-建议价列表页") {
+        suggestPrice();
     }
     var a_id = localStorage.a_id;
     var a_nick = localStorage.a_nick;
@@ -246,6 +248,53 @@ function addAdvertisement(){
             }
         });
     });
+}
+
+function suggestPrice(){
+        $.ajax({
+            url: 'http://180.76.233.59:81/suggest/price',
+            type: "post",
+            async: "false",
+            dataType: "json",
+            success: function (data) {
+                if (data.status != 0) {
+                    alert("error");
+                } else {
+                    var suggest = data.data.suggest;
+                    var tbody = $('tbody');
+                    for (var i = 0; i < suggest.length; i++) {
+                        var tr = $('<tr></tr>');
+                        tr.appendTo(tbody);
+                        $('<td>' + suggest[i].id + '</td>').appendTo(tr);
+                        $('<td>' + suggest[i].merchant_id + '</td>').appendTo(tr);
+                        $('<td>' + suggest[i].product_id + '</td>').appendTo(tr);
+                        $('<td><input type="text" placeholder="价格" name="price" value="' + suggest[i].price + '"> <button class="btn btn-danger btn-xs pos" name="bind" >通过</button></td>').appendTo(tr);
+                    }
+
+                    $('.pos').each(function(event){
+                        $(this).click(function(event){
+                            var dataJson = {};
+                            dataJson.id = $(this).parent().siblings(":first").text();
+                            dataJson.price = $(this).prev().val();
+                            $.ajax({
+                                url: 'http://180.76.233.59:81/post/suggest/price',
+                                type: "post",
+                                async: "false",
+                                dataType: "json",
+                                success: function (data) {
+                                    if (data.status == 0){
+                                        alert("成功通过");
+                                        window.location.reload();
+                                    } else {
+                                        alert("失败，请重试");
+                                    }
+                                }
+                            });
+                        });
+                    });
+                }
+            }
+        });
 }
 
 function advertisementList() {
