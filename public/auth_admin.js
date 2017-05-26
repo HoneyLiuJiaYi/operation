@@ -81,6 +81,10 @@ $(function () {
         adminEdit();
     }if (title == "享洗小组-商品编辑") {
         productEdit();
+    }if (title == "享洗小组-广告建立") {
+        addAdvertisement();
+    }if (title == "享洗小组-广告列表管理页") {
+        advertisementList();
     }
     var a_id = localStorage.a_id;
     var a_nick = localStorage.a_nick;
@@ -197,6 +201,157 @@ function sexStatic() {
     pieChart.Doughnut(PieData, pieOptions);
 }
 
+function addAdvertisement(){
+    $.ajax({
+        type: "POST",
+        url:'http://180.76.233.59:81/advertisement/product',
+        dataType: "json",
+        error: function(request) {
+            alert("Connection error");
+        },
+        success: function(data) {
+            var select = $('select');
+            var product = data.data.product;
+            for (var i = 0 ; i < product.length ; i++){
+                $("<option value='" + product[i].id + "'>" + product[i].name + "</option>").appendTo(select);
+            }
+            $('#logo').change(function(){
+                var imgFile = this.files[0];
+                var fr = new FileReader();
+                fr.onload = function() {
+                    document.getElementById('image').getElementsByTagName('img')[0].src = fr.result;
+                };
+                fr.readAsDataURL(imgFile);
+            });
+        }
+    });
+    $("#ad_add").click(function(){
+        $.ajax({
+            type: "POST",
+            url:'http://180.76.233.59:81/advertisement/add',
+            data: new FormData($('#adForm')[0]),
+            processData: false,
+            contentType: false,
+            async: false,
+            error: function(request) {
+                alert("Connection error");
+            },
+            success: function(data) {
+                if (data.status=='0') {
+                    alert("添加成功！");
+                }else{
+                    alert(data.msg);
+                }
+            }
+        });
+    });
+}
+
+function advertisementList() {
+    $.ajax({
+        url: 'http://180.76.233.59:81/advertisement/list',
+        type: 'post',
+        data: "product_id=" + 0,
+        dataType: 'json',
+        success: function (data) {
+            var table = $("tbody");
+            var ads = data.data.ad;//admins
+            for (var i = 0; i < ads.length; i++) {
+                var tr = $("<tr></tr>");
+                tr.appendTo(table);
+                $("<td>" + ads[i].id + "</td>").appendTo(tr);
+                $("<td>" + ads[i].name + "</td>").appendTo(tr);
+                $("<td>" + ads[i].product_id + "</td>").appendTo(tr);
+                $("<td>" + ads[i].product_name + "</td>").appendTo(tr);
+                $('<td><img src="' + ads[i].ad_logo + '" width="30" height="30"></td>').appendTo(tr);
+                $('<td><button class="btn btn-danger btn-xs del">删除</button></td>').appendTo(tr);
+            }
+            $('.del').each(function (event) {
+                $(this).click(function (event) {
+                    var dataJson = {};
+                    dataJson.id = $(this).parent().siblings(":first").text();
+                    $.ajax({
+                        url: 'http://180.76.233.59:81/advertisement/del',
+                        type: 'post',
+                        data: dataJson,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.status == 0){
+                                alert("删除成功");
+                                window.location.reload();
+                            } else{
+                                alert(data.msg);
+                            }
+                        }
+                    });
+                });
+            });
+        }
+    });
+    $.ajax({
+        type: "POST",
+        url: 'http://180.76.233.59:81/advertisement/product',
+        dataType: "json",
+        error: function(request) {
+            alert("Connection error");
+        },
+        success: function(data) {
+            var select = $('#sel');
+            var product = data.data.product;
+            for (var i = 0 ; i < product.length ; i++){
+                $("<option value='" + product[i].id + "'>" + product[i].name + "</option>").appendTo(select);
+            }
+
+            select.change(function(){
+                var sid = $('#sel').val();
+                $.ajax({
+                    url: 'http://180.76.233.59:81/advertisement/list',
+                    type: 'post',
+                    data: "product_id=" + sid,
+                    dataType: 'json',
+                    success: function (data) {
+                        var table = $("tbody");
+                        table.text('');
+                        var ads = data.data.ad;//admins
+                        for (var i = 0; i < ads.length; i++) {
+                            var tr = $("<tr></tr>");
+                            tr.appendTo(table);
+                            $("<td>" + ads[i].id + "</td>").appendTo(tr);
+                            $("<td>" + ads[i].name + "</td>").appendTo(tr);
+                            $("<td>" + ads[i].product_id + "</td>").appendTo(tr);
+                            $("<td>" + ads[i].product_name + "</td>").appendTo(tr);
+                            $('<td><img src="'+ads[i].ad_logo+'" width="30" height="30"></td>').appendTo(tr);
+                            $('<td><button class="btn btn-danger btn-xs del" >删除</button></td>').appendTo(tr);
+                        }
+                        $('.del').each(function (event) {
+                            $(this).click(function (event) {
+                                var dataJson = {};
+                                dataJson.id = $(this).parent().siblings(":first").text();
+                                $.ajax({
+                                    url: 'http://180.76.233.59:81/advertisement/del',
+                                    type: 'post',
+                                    data: dataJson,
+                                    dataType: 'json',
+                                    success: function (data) {
+                                        if (data.status == 0){
+                                            alert("删除成功");
+                                            window.location.reload();
+                                        } else{
+                                            alert(data.msg);
+                                        }
+                                    }
+                                });
+                            });
+                        });
+                    }
+                });
+            });
+        }
+    });
+
+
+}
+
 function productEdit(){
     $('#product_id').val(localStorage.update_product_id);
     $('#old').val(localStorage.update_product_id);
@@ -227,8 +382,6 @@ function productEdit(){
 }
 
 function adminEdit(){
-
-
     $.ajax({
         url:"http://180.76.233.59:81/admin/single",
         type: "post",
@@ -1506,7 +1659,7 @@ function categoryList(){
                 $("<td>" + category_list[i].name + "</td>").appendTo(tr);
                 $('<td><img src="'+category_list[i].logo+'" width="30" height="30"></td>').appendTo(tr);
                 $("<td>" + category_list[i].created_at + "</td>").appendTo(tr);
-                $("<td>" + category_list[i].created_at + "</td>").appendTo(tr);
+                $("<td>" + category_list[i].updated_at + "</td>").appendTo(tr);
                 if (category_list[i].is_delete == 0) {
                     $("<td>可用</td>").appendTo(tr);
                 } else {
